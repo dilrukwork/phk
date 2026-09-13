@@ -219,3 +219,9 @@
   color: #666;
   margin-top: 2em;
 }
+
+p {
+  text-indent: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}

@@ -20,7 +20,7 @@ from PIL import Image
 TESSERACT_CMD = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 LANG = "sin"
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parent
 OCR_DIR = REPO_ROOT / "src" / "ocr"
 
 

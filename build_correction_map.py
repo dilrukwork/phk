@@ -32,7 +32,7 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parent
 OCR_DIR = REPO_ROOT / "src" / "ocr"
 
 HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
