@@ -87,17 +87,18 @@
 
 <!-- src: page_0005.png (iv) -->
 <!-- LOW CONFIDENCE: see file-level note on this page's decorative typeface. Sermon titles (11-15) are best-effort readings to be re-verified against each sermon's own epigraph page. -->
-<div class="toc-title">පටුන</div>
-<div class="toc-list">
-<div class="toc-entry"><span>හැඳින්වීම</span><span>v</span></div>
-<div class="toc-entry"><span>ප්‍රකාශක නිවේදනය</span><span>viii</span></div>
-<div class="toc-entry"><span>ධර්ම ග්‍රන්ථ මුද්‍රණ භාරය</span><span>ix</span></div>
-<div class="toc-entry"><span>අමා ගහ</span><span>xi</span></div>
-<div class="toc-entry"><span>11. 'පඨව්‍යා ඒකරජ්ජේන' [corrected -- see page_0013.png note]</span><span>3</span></div>
-<div class="toc-entry"><span>12. 'අත්ථ පාපානි කම්මානි'</span><span>27</span></div>
-<div class="toc-entry"><span>13. 'ණෙනෙහාඌපූනෛභෞදෛබ්ඝා ධර්ම' [unclear]</span><span>51</span></div>
-<div class="toc-entry"><span>14. 'ස්සුඛ වත ජීවෘම' [unclear]</span><span>77</span></div>
-<div class="toc-entry"><span>15. 'යෙ චව වසසසනං කීලදී' [unclear],<br/>ධර්ම ග්‍රන්ථ මුද්‍රණ භාරයේ<br/>අනුග්‍රාහක මණ්ඩලය</span><span>101</span></div>
+<div class=toc-title>පටුන</div>
+<div class=toc-list>
+<div class=toc-entry><span>හැඳින්වීම</span></div>
+<div class=toc-entry><span>ප්‍රකාශක නිවේදනය</span></div>
+<div class=toc-entry><span>ධර්ම ග්‍රන්ථ මුද්‍රණ භාරය</span></div>
+<div class=toc-entry><span>අමා ගහ</span></div>
+<br/>
+<div class=toc-entry><span>11. 'පඨව්‍යා ඒකරජ්ජේන'</span></div>
+<div class=toc-entry><span>12. 'අත්ථ පාපානි කම්මානි'</span></div>
+<div class=toc-entry><span>13. 'මනෝ පුබ්බංගමා ධම්මා'</span></div>
+<div class=toc-entry><span>14. 'සුසුඛං වත ජීවාම'</span></div>
+<div class=toc-entry><span>15. 'යෝ ච වස්සසතං ජීවේ'</span></div>
 </div>
 
 <div class="page-break"></div>
@@ -125,7 +126,7 @@
 
 <div class="footnote"><sup>*</sup> වෙළුම් 11කින් යුත් මේ පොත් පෙළෙහි වෙළුම් 9ක් මේ වන විට නිකුත් වී ඇත.</div>
 
-<div class="page-number">v</div>
+
 
 <div class="page-break"></div>
 
@@ -140,7 +141,7 @@
 <strong>කටුකුරුන්දේ ඤාණානන්ද භික්ෂු</strong>
 </div>
 
-<div class="page-number">vi</div>
+
 
 <div class="page-break"></div>
 
@@ -153,7 +154,7 @@
 (2542) 1999 පෙබරවාරි 12
 </div>
 
-<div class="page-number">vii</div>
+
 
 <div class="page-break"></div>
 
@@ -189,7 +190,7 @@
 </div>
 </div>
 
-<div class="page-number">viii</div>
+
 
 <div class="page-break"></div>
 
@@ -219,7 +220,7 @@
 කොළඹ 5.
 </div>
 
-<div class="page-number">ix</div>
+
 
 <div class="page-break"></div>
 
@@ -235,7 +236,7 @@
 
 <p class="justifytext">"පොත් අලෙවිය" පිළිබඳව මෙකල බහුලව දක්නට ලැබෙන වාණිජ සංකල්පයට පිටුපා, තහංචිවලින් තොරව, තමන් අතට නොමිලයේම පත් කැරෙන "දහම් පඩුර" තුළින් ධම්දාන සංකල්පයෙහි අගය වටහා ගත් බොහෝ පාඨක පින්වත්හු තමන් අතට ලද රස අහරක්, නෑ-හිතවතුන් සමඟ බෙදා-හදා ගන්නාක් මෙන් නොමසුරුව අත් දහම් ලැදියතාද දී ධම්දානයට සහභාගී වූහ. ඉනුදු නොනැවැති, ශක්ති පමණින් "ධර්ම ග්‍රන්ථ මුද්‍රණභාරයට" උරදීමටද ඉදිරිපත්වූහ, ඇතැමෙක් ලොකු කුඩා දහම් පොත්</p>
 
-<div class="page-number">x</div>
+
 
 <div class="page-break"></div>
 
@@ -260,7 +261,7 @@
 2000 ජූනි 05 (2544 පොසොන්)
 </div>
 
-<div class="page-number">xi</div>
+
 
 <div class="page-break"></div>
 
