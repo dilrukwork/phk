@@ -63,7 +63,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 sys.stdout.reconfigure(encoding="utf-8")
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parent
 OCR_DIR = REPO_ROOT / "src" / "ocr"
 FONTS_DIR = REPO_ROOT / "src" / "fonts"
 RESOURCES_DIR = REPO_ROOT / "src" / "resources"
@@ -442,12 +442,13 @@ if __name__ == "__main__":
     parser.add_argument("--label", default="")
     parser.add_argument("--toc-limit", type=int, default=None)
     parser.add_argument("--toc-keep", default=None, help="comma-separated 1-based entry indices")
-    parser.add_argument("--cover-image", action="store_true",
-                         help="rasterize the cover text into an embedded JPEG cover")
+    parser.add_argument("--no-cover-image", action="store_true",
+                         help="disable automatic cover image rasterization")
     parser.add_argument("--page-numbers", action="store_true",
                          help="append a sequential page-number marker to every page-break chunk")
     args = parser.parse_args()
     toc_keep = [int(x) for x in args.toc_keep.split(",")] if args.toc_keep else None
+    cover_image = not args.no_cover_image
     build_epub(args.name, args.start_line, args.end_line, args.range,
                args.suffix, args.label, args.toc_limit, toc_keep,
-               args.cover_image, args.page_numbers)
+               cover_image, args.page_numbers)

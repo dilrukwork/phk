@@ -17,7 +17,7 @@ import pymupdf as fitz
 
 DPI = 300
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+REPO_ROOT = Path(__file__).resolve().parent
 RAWPDF_DIR = REPO_ROOT / "src" / "rawpdf"
 OCR_DIR = REPO_ROOT / "src" / "ocr"
 
