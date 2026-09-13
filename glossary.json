@@ -1,0 +1,362 @@
+[
+  {
+    "book": "pahankanuwa_10",
+    "page_image": "page_0039.png",
+    "book_page": 25,
+    "context": "Sermon 47's four-stanza epigraph on Rahula's arahantship (Theragatha-style verses), opening 'උභයෙනෙව සම්පනෙනා රාහුල හදෙති මං විදූ...' through 'සමූලං තණ්හමබ්බුය්හ සීතිභූතොස්මි නිබ්බුතොති'.",
+    "issue": "This is recognizable as a canonical verse set on Rahula's declaration of arahantship, but the scan quality left several words uncertain against standard Pali forms (e.g. 'බීණා' for expected 'ඛීණා', 'දක්බිණෙයාමහි' for expected 'දක්ඛිණෙය්‍යොම්හි', 'ඡදනජාදිතා' for an expected 'ඡාදන-'/'ඡාදිතා' form, 'කුමිනාමුබෙ' for an expected 'කුම්භිනාමුඛෙ' or similar fish-trap image). Transcribed as printed rather than silently normalized to a presumed source text. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 25, sermon 47, talk 159) to confirm the exact Pali wording and diacritics.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_10",
+    "page_image": "page_0035.png",
+    "book_page": 21,
+    "context": "Sermon 46's second epigraph verse: 'යො උහනෙන විදිඨාන - මජ්ඣේඝ මනතා න ලිප්පති / තං බෑමි මහා පුරිසොති - සොධ සිබ්බනිමවගා', on 'the two ends' and the 'seamstress' (craving) simile.",
+    "issue": "This appears to be a well-known Sutta Nipata verse (Purabheda-style 'ubho ante viditvāna majjhe mantāya no limpati... so idha sibbanim accagā' -- one who, having known both ends, does not cling to the middle, escapes the seamstress), but the scan/print quality made several words hard to verify with full confidence (e.g. 'උහනෙන', 'මජ්ඣේඝ', 'බෑමි', 'සොධ' as printed do not resolve cleanly to standard Pali forms like 'ubhante', 'majjhe', 'brūmi', 'so'dha'). The transcription follows the printed text as closely as could be read rather than normalizing to the presumed source verse. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 21, sermon 46) to confirm the exact Pali wording.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_10",
+    "page_image": "page_0015.png",
+    "book_page": 1,
+    "context": "Sermon 46's epigraph (no source citation given in print), the four-line verse opening 'දුප්පබ්බජ්ජං මේ දුරධිවාසා ගෙහා / ධම්මා ගම්භීරෙ දුරධිගමා හොන්ති / කිච්ඡා වුත්ති නො ඉතරීතරෙනව / යුත්තං චිනෙතුං සතතමනිච්චත'ති'.",
+    "issue": "Lines 1-2 read fairly clearly (echoing Dhammapada v.302's 'duppabbajjaṃ...gharā dukkhā' theme, though the exact wording here differs from Dhp 302 and was transcribed as printed rather than normalized to that verse). Line 3 ('කිච්ඡා වුත්ති නො ඉතරීතරෙනව') and the ending of line 4 do not resolve to grammatical Pali with confidence at this scan resolution -- transcribed as a best-effort literal reading. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 1, sermon 46, talk 155) to confirm the exact Pali wording.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_09",
+    "page_image": "page_0020.png",
+    "book_page": 26,
+    "context": "Sermon 42's Cula Gopalaka Sutta narrative: '...නොතොටින් - තමන්ගේ ගව රැල ගෂඉන් එතර පිහිටි විදේහ රටට එතර කරන්න උත්සාහ කලා.' (the foolish cowherd tries to take his herd across at a non-ford, to reach Videha country on the far shore).",
+    "issue": "The word transcribed as 'ගෂඉන්' does not resolve to a standard Sinhala word -- it sits between 'ගව රැල' (herd of cattle) and 'එතර පිහිටි විදේහ රටට' (to Videha country situated across) and is presumably a preposition/adverb describing how the crossing was attempted (e.g. something like 'ගඟින්' via the river, or a mistaken duplicate of 'නොතොටින්'), but this scan region did not resolve clearly even on close inspection of the page image. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 26, sermon 42) to confirm the correct word.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_09",
+    "page_image": "page_0039.png",
+    "book_page": 61,
+    "context": "Sermon 44, discussing Maha Pajapati Gotami's personal gift to the Buddha which he redirected to the Sangha: 'බලන්න බුදුරජාණන් වහන්සේගේ මහා පුදුම දූඉහ ගුණයක් ඒක.'",
+    "issue": "The word transcribed as 'දූඉහ' (qualifying 'ගුණයක්', quality) does not resolve to a standard Sinhala word -- possibly 'දුර්ලභ' (rare/precious) given the sense 'a great, wondrous, rare quality of the Buddha's', but this is an unconfirmed guess and was left untranscribed/literal rather than silently corrected. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 61, sermon 44) to confirm the correct word.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_09",
+    "page_image": "page_0060.png",
+    "book_page": 98,
+    "context": "Sermon 45's epigraph: five stanzas from the Sabhiya Sutta (Sutta Nipata), cited '- සභිය සූ. සුත්ත නිපාත', opening 'කිං පත්තිනමාහු භික්ඛුනං...' through 'පත්තං ජාතික්ඛයං තමාහූ බුද්ධන්ති'.",
+    "issue": "This is a longer five-stanza verse from a less frequently quoted sutta. The scan print quality made several diacritics and word-endings hard to verify with full confidence against a known source text (unlike the shorter, more commonly-cited verses elsewhere in this series). The transcription is a best-effort reading. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 98, sermon 45) to confirm the exact Pali wording and diacritics.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_09",
+    "page_image": "page_0020.png",
+    "book_page": 25,
+    "context": "Sermon 42's epigraph verses closing the Cula Gopalaka Sutta (Majjhima Nikaya), cited as 'Cula Gopalaka Su. Majjhima Nikaya': 'අයං ලෝකො පර ලෝකො - ජානතා සුප්පකාසිතො / යක්ඛ මාරෙන සම්පත්තං - අප්පත්තං යක්ඛ මච්චුනා / සබ්බං ලෝකං අභිඤ්ඤාය - සම්බුඬෙන පජානතා / විවටං අමතද්වාරං - බෙම්හං නිබ්බානපත්තියා / පීනං පාපිමතො සොතං - විද්ධස්තං විනළීකතං / පාමුජ්ජබහුලා හොථ - බෙම්මං පසෙක්ඛ භික්ඛවෙ'",
+    "issue": "This three-line-pair verse (the closing gathas of MN 34, Cula Gopalaka Sutta) was badly garbled in the scan and could not be matched with confidence against a known Tipitaka source text, unlike most other verses in this series. Several words are uncertain best-effort readings, especially 'මවඃනා'-type ligatures normalized to 'මච්චුනා', and 'බෙම්හං'/'බෙම්මං' which do not resolve to standard Pali vocabulary I can independently confirm. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 25, sermon 42) to confirm the exact Pali wording.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0051.png",
+    "book_page": 290,
+    "context": "මේ ලෝකයේ තිබෙනවා [...unclear: two-doctrine phrase...] කර්මවාදියි ධම්වාදියි කියලා.",
+    "issue": "The count/lead-in word before 'කර්මවාදියි ධම්වාදියි' is illegible in the scan even after Gaussian-blur cleanup. 'ධම්වාදියි' is also an unusual pairing with 'කර්මවාදියි' -- possibly 'අකර්මවාදියි' (kamma-doctrine vs. non-kamma-doctrine, a recognized classical contrast) misread. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 290, sermon 12).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0070.png",
+    "book_page": 311,
+    "context": "...ඔය සතුන් මැරීමෙන් වෙන් වීමට, 'වේරමණී - ආසන්න සික්ඛාපදං' කියන විදියට කියන්නට ඕන... සතුන් නැසීමෙන්, සතුන් මැරීමෙන් වෙන් වීම පිළිබඳ ශික්ෂාපදය මම සමාදන් වෙනවා කියලා... එයින්ම කරන්ටම වෙන පොරොන්දුවක් මේක. සංසාරයේ ඉදිරියේ මේක ප්‍රකාශ කරනවා කියලා...",
+    "issue": "This page's scan is a coarse halftone/dot-matrix print (much lower effective resolution than surrounding pages) -- even after Gaussian-blur cleanup and 4x quadrant zoom, several short phrases around the five-precepts ('pancha sila') explanation stayed ambiguous: the lead-in before the Pali quote 'Panatipata veramani sikkhapadam samadiyami', the exact wording of 'satun nasimen, satun marimen ven vimа pilibanda sikshapadaya...', and the phrase rendered here as 'eyinma karantama vena porondu vak meka. Sansarayē idiriyē meka prakasha karanawa kiyala'. The Pali precept formula itself is transcribed correctly (it's a fixed, well-known phrase), but the surrounding Sinhala commentary sentence structure is a best-effort reading. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 311).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0071.png",
+    "book_page": 312,
+    "context": "ඒක නිසාම මේ චාරිත්‍ර මාත්‍රයක් හැටියට -- දැන් හැම රැස්වීමකදීම උත්සවයක් බෞද්ධ බව පෙන්නන්න සිල් සමාදන් වීම කියලා එකක් කියනවා.",
+    "issue": "The word 'රැස්වීමකදීම' (at every gathering) is a best-effort reading of a phrase that is ambiguous in this halftone scan; resolved by cross-referencing the Tesseract draft pass, which read a similar but garbled fragment ('...හැම රැස්වීම්කම...') supporting this word choice over an initially-considered alternative. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 312, sermon 13).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0073.png",
+    "book_page": 314,
+    "context": "එපමණකින්ම නොවෙයි අර සිතින්ම නිර්මාණය වෙලා තියෙන එකා [...unclear...] පැහැදිලි වෙනවා.",
+    "issue": "Short clause between 'එකා' and 'පැහැදිලි වෙනවා' is illegible even after strip-crop + blur cleanup; the Tesseract draft is also garbled at this exact spot. Context suggests it explains how the deva-mansion is mind-made becoming 'clear/evident'. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 314, sermon 13).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0081.png",
+    "book_page": null,
+    "context": "Tail end of Sermon 13's closing dedication-of-merit paragraph and a short quoted line beneath it.",
+    "issue": "This page's scan is far more degraded than surrounding pages (Tesseract draft unusable) -- likely a very light/uneven print impression on this leaf. The transcription is a low-confidence paraphrase of the dedication paragraph's general sense, and the short quoted line following it could not be read beyond the opening word 'අරහං'. Also unclear: this page's own physical page number was not legible/visible on the scan (inferred as ~322 from sequence only). Please check the physical book or Pahan_Kanuwa audio for this page (end of sermon 13, immediately before the '14 වන දේශනය' divider at page_0082.png).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0103.png",
+    "book_page": 345,
+    "context": "Closing dedication-of-merit paragraph and quoted line ('එත්තාවතා ච අම්හේහි...') ending sermon 14.",
+    "issue": "This page's scan is a coarse halftone/dot-matrix print, more degraded than surrounding pages. The transcription is a best-effort reading based on the standard recurring dedication formula used elsewhere in this book (compare book 2's talk 7 closing) rather than a direct character-by-character read. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0105.png",
+    "book_page": 349,
+    "context": "Opening of sermon 15: the four-line Pali epigraph, and the narrative paragraphs introducing an unnamed elder who attains arahantship and is later mistaken for a stone post ('kanuwa') by a band of robbers.",
+    "issue": "The Pali epigraph is reconstructed from a heavily degraded scan, identified by wording/theme match to Dhammapada v.110 (Sahassavagga: 'yo ca vassasataṃ jīve dussīlo asamāhito...'); this identification is fairly confident since the same verse recurs more legibly on page_0107.png, but the citation line ('- සහස්සවග්ග, ධම්මපදපාළි') is inferred, not read from the page. The elder's name in the narrative could not be read at all (marked '[...නම අපැහැදිලියි...]'), and several connecting phrases in both narrative paragraphs are best-effort reconstructions. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 349).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0106.png",
+    "book_page": 350,
+    "context": "The robbers flee at dawn, discover the 'post' was a meditating monk, apologize, and their leader (followed by the rest of the band) asks for ordination.",
+    "issue": "This page's scan is degraded through much of its lower half. The sequence of events is a best-effort reading; exact dialogue wording (quoted lines) is not confirmed character-for-character. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 350, sermon 15).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0107.png",
+    "book_page": 351,
+    "context": "Repeated epigraph verse followed by its prose explanation (a short virtuous, meditative life outweighs a long undisciplined one).",
+    "issue": "This page's scan is degraded in its middle and lower portions. The general sense of the explanatory paragraph is reasonably clear, but exact sentence phrasing is a best-effort reconstruction. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 351, sermon 15).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0108.png",
+    "book_page": 352,
+    "context": "Discussion of the rarity of human birth within a Buddha's dispensation, then a transition to the three kinds of miracles (iddhi-, ādesanā-, anusāsanī-pāṭihāriya) and the four iddhipāda (chanda, viriya, citta, vīmaṃsā).",
+    "issue": "This page's scan is significantly degraded. Only the doctrinal terms themselves (the three miracles, the four iddhipada) could be read with any confidence; the connecting/explanatory sentences are marked '[...unclear...]' rather than invented. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0109.png",
+    "book_page": 353,
+    "context": "General point that people labelled 'murderer', 'thief', or 'wrongdoer' can still change their life's direction, and that such labels can themselves work against reform.",
+    "issue": "This page's scan is heavily degraded -- most of the page could not be confidently transcribed word-for-word and is rendered as a short paraphrase with '[...unclear...]' markers for the untranscribable stretches. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0110.png",
+    "book_page": 354,
+    "context": "Introduction of the Angulimala story as a parallel example, followed by the Dhammapada verse traditionally associated with it.",
+    "issue": "The name 'අංගුලිමාල' is legible in the scan and the epigraph is confidently identified as Dhammapada v.173 (Lokavagga: 'yassa pāpaṃ kataṃ kammaṃ kusalena pidhīyati...'), matching the wording of the source. However, the prose sentences framing this reference are a best-effort reading, and the closing sentence after the verse is only partially legible. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0111.png",
+    "book_page": 355,
+    "context": "General point that a person's worth/potential is not fixed by caste, wealth, or poverty; anyone can change their life's direction.",
+    "issue": "This page's scan is heavily degraded throughout and could not be reliably transcribed sentence-by-sentence; rendered as a short paraphrase of the identifiable general point with '[...unclear...]' markers for the untranscribable supporting sentences. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0112.png",
+    "book_page": 356,
+    "context": "Return to the theme that today's occasion is a Poya-day observance ('පෝය දා ව්‍රතාව', legible and repeated in the scan) valuable for shaping one's life according to the Dhamma.",
+    "issue": "This page's scan is heavily degraded throughout. Only the repeated phrase 'පෝය දා ව්‍රතාව' could be confidently read; the rest is rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0113.png",
+    "book_page": 357,
+    "context": "Apparent illustrative analogy involving gems/diamonds, and a quoted Pali fragment resembling '...passataṃ narānaṃ ratanaṃ...' (a jewel among men).",
+    "issue": "This page's scan is heavily degraded throughout. The Pali quotation and the gem/diamond vocabulary are faintly legible but could not be reliably reconstructed into full sentences; the Pali fragment is not transcribed into the body text at all pending verification. Rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page -- the exact Pali verse should be identified and inserted here.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0114.png",
+    "book_page": 358,
+    "context": "Continuation of the gem/diamond analogy, apparently transitioning into a discussion of insight into arising and passing away (a Satipatthana-style contemplation refrain is faintly legible).",
+    "issue": "This page's scan is heavily degraded throughout. The Pali fragment resembling the Satipatthana arising/passing-away refrain is not transcribed into the body text pending verification. Rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page -- the exact Pali phrase should be identified and inserted here.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0115.png",
+    "book_page": 359,
+    "context": "The Noble Eightfold Path list (sammā diṭṭhi ... sammā samādhi) transcribed with confidence; surrounding prose about how this path leads to Nibbana, followed by a further gem-related comparison.",
+    "issue": "This page's scan is heavily degraded except for the clearly legible Noble Eightfold Path list, which matches the same list's wording elsewhere in this book series and is transcribed with confidence. The surrounding sentences are a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0116.png",
+    "book_page": 360,
+    "context": "Water/clarity analogy for a settled mind.",
+    "issue": "This page's scan is heavily degraded throughout and rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0117.png",
+    "book_page": 361,
+    "context": "Right view (සම්මා දිට්ඨිය) and the Poya-day observance (පෝය දා ව්‍රතාව).",
+    "issue": "This page's scan is heavily degraded throughout; only the two recurring key phrases could be confidently read. Rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0118.png",
+    "book_page": 362,
+    "context": "Discussion of self/other labelling (ඒයා/තෝ/මම) in relation to right view.",
+    "issue": "This page's scan is heavily degraded throughout and rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0119.png",
+    "book_page": 363,
+    "context": "Fixed labels on a person (thief, drunkard, wrongdoer) as an obstacle to their reform.",
+    "issue": "This page's scan is heavily degraded throughout and rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0120.png",
+    "book_page": 364,
+    "context": "The sammappadhāna (right-effort) Pali formula 'chandaṃ janeti vāyamati vīriyaṃ ārabhati cittaṃ paggaṇhāti padahati' with a word-by-word gloss, framed by a festival/celebration analogy.",
+    "issue": "The Pali formula itself is a well-known fixed phrase and transcribed with reasonable confidence despite scan degradation; the festival analogy framing it, and the exact wording of the gloss sentences, are a best-effort reconstruction. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0121.png",
+    "book_page": 365,
+    "context": "Continuation of the labelling discussion, returning to the value of the Poya-day observance ('පෝය දා ව්‍රතාව').",
+    "issue": "This page's scan is heavily degraded throughout and rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0122.png",
+    "book_page": 366,
+    "context": "Apparent discussion of recollecting the qualities of the Triple Gem, including repeated reflection on the epithet 'අරහං' (Arahant).",
+    "issue": "This page's scan is heavily degraded throughout; only the repeated word 'අරහං' and adjacent Buddha/Sangha-related vocabulary could be made out. Rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0123.png",
+    "book_page": 367,
+    "context": "The five faculties 'සද්ධා, විරිය, සති, සමාධි, ප්‍රඥා' recurring as the sermon's threads are drawn together.",
+    "issue": "This page's scan is heavily degraded throughout; only the five-faculties list could be confidently identified (it recurs verbatim elsewhere in this book). Rendered as a short paraphrase with '[...unclear...]' markers. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0124.png",
+    "book_page": 368,
+    "context": "Closing dedication-of-merit paragraph and quoted line ('එත්තාවතා ච අම්හේහි...') ending sermon 15.",
+    "issue": "Transcribed using the same recurring dedication formula found at the end of sermon 14 (page_0103.png) and elsewhere in this book series, since this page's own scan is degraded; the lead-in sentence before this fixed formula is a best-effort reconstruction rather than a direct read. Please check the physical book or Pahan_Kanuwa audio for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_03",
+    "page_image": "page_0125.png",
+    "book_page": null,
+    "context": "Back-matter list of the author's other publications ('ග්‍රන්ථ නාමාවලිය'), items 5, 7, 8 (partial), 12, 13, 14, and 17 -- the Sinhala-titled works.",
+    "issue": "This page's scan is notably clearer than the rest of the book, so the English titles and dates are transcribed with high confidence. However, several Sinhala book titles (items 5, 7, 12, 13, 14, 17, and part of 8) remain ambiguous in this typeface/scan combination and are marked '[...unclear title...]' rather than guessed. These are real, identifiable published works by the author (a Sri Lankan Theravada bhikkhu, based on the English titles such as 'Concept and Reality in Early Buddhist Thought', 'The Magic of the Mind', 'Towards Calm and Insight', and 'Seeing Through') -- cross-checking against a published bibliography of the author's works would likely resolve these titles faster than re-reading the scan. Please check the physical book or the author's other front-matter pages for this page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_04",
+    "page_image": "page_0008.png",
+    "book_page": null,
+    "context": "Sermon 16's divider page carries a date line '2000 ජුනි 05 (2544 පොසොන්)' above the '16 වන දේශනය' heading -- a new element not seen on any sermon divider in Volumes 1-3.",
+    "issue": "Unclear whether this date is this sermon's original delivery/Poya date, an editorial/typesetting date, or an unrelated stray fragment from the layout. It does not obviously match the sermon's own opening paragraph, which names the occasion as 'ඇසල පුර පසළොස්වක පෝය' (the Esala full-moon Poya) rather than Poson (June). Please check the physical book (does every sermon divider in this volume carry such a date line, and if so do they consistently match each sermon's stated Poya?) or the Pahan_Kanuwa audio for this sermon.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_04",
+    "page_image": "page_0033.png",
+    "book_page": 421,
+    "context": "Footnote under the sermon 18 heading: '*මේ දෙසුම, [...] නමින් කුඩා පොතක් වශයෙන් ද මුද්‍රණය විය.' (this sermon was also printed separately as a small booklet under the name '...').",
+    "issue": "The booklet's title within the footnote is illegible in this scan. Please check the physical book for the exact title of this separately-printed booklet.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_04",
+    "page_image": "page_0046.png",
+    "book_page": 447,
+    "context": "Sermon 19's opening story (the jeweller and Thera Tissa): '...මේ ගෙදර හිටියා හුරතලයට ඇතිකරන කොස්වා ලිහිණියෙක්...'",
+    "issue": "Transcribed as 'කොස්වා ලිහිණියා' -- the bird's name recurs consistently (both spelled 'කෙස්වා' and 'කොස්වා' across the OCR draft) on pages 447 and 448, which supports it being a real (if uncommon) bird-name compound rather than pure noise, but it doesn't match any bird name we can independently confirm. Please check the physical book or the Pahan_Kanuwa audio for this page (physical pages 447-448, sermon 19) to confirm the exact name/spelling.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_04",
+    "page_image": "page_0047.png",
+    "book_page": 449,
+    "context": "The dhutanga (ascetic-vow) verse Thera Tissa recites after resolving to keep to the strict alms-round practice, quoted in the right column of page 449 just above its Sinhala paraphrase ('පිණ්ඩපාතේ වඩින භික්ෂුව සඳහා...').",
+    "issue": "This short Pali/Sinhala verse is badly garbled in both the scan and the OCR draft (draft: 'පටවති මුතිතො හතත - ටථලෙකරෙක කූලෙ කූලෙ, පිණඩිකාය චර්සසාමී - අපථි ජඩසාබලං මම') and does not resolve to grammatical Pali on either pass. The transcription given is a low-confidence best-effort reading, not a verified quotation -- please check the physical book or the Pahan_Kanuwa audio for this page (physical page 449, sermon 19) for the correct verse.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_05",
+    "page_image": "page_0039.png",
+    "book_page": 553,
+    "context": "දේවදත්ත ස්ථවීරයන්ට ලේ වමනය ඇති වුනා කියලා. ලේ වමනය දැක්මා කියලා. ඒ ඇතිවුණු චිත්ත කම්පනයත් ලේ වමනයත් නිසා නව මාසයක්ම රෝගාතුරව...",
+    "issue": "The word transcribed as 'දැක්මා' (right column, ~7th line) does not resolve to a standard Sinhala word in this position -- it may be 'දැක්කා' (saw) or a repetition/emphasis clause. Meaning of the surrounding sentence (Devadatta began vomiting blood) is otherwise clear. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 553, sermon 23).",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_06",
+    "page_image": "page_0001.png",
+    "book_page": null,
+    "context": "Cover author credit, rendered in a bold decorative display font: 'කටුකුරුන්දේ [...] හිකෟු'.",
+    "issue": "The author's given name on the cover is set in a heavily stylized/decorative font that does not resolve cleanly to standard glyphs -- it reads roughly as 'සදුානන්ද' and the title word after it as 'හිකෟු'. Transcribed in this draft as 'කටුකුරුන්දේ ඤාණානන්ද භික්ෂු' (matching the author name used consistently on Volumes 1-5's cleaner title-page text, same publisher/sasanaya), on the assumption this is the same author's name rendered in a fancier typeface rather than a different author. Please confirm against the physical book cover.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_06",
+    "page_image": "page_0009.png-page_0011.png",
+    "book_page": 614,
+    "context": "Sermon 26's epigraph source line, and the recurring name of the brahmin youth throughout the sermon's opening narrative (e.g. right column, page 616: 'ජත්ත මාණවකයා', 'ජත්ත දිව්‍ය පුත්‍රයාගේ').",
+    "issue": "The proper name transcribed consistently as 'ජත්ත' (in 'ජත්ත මානවක විමානවත්ථු' and throughout the story of the brahmin youth who took the three refuges and was reborn a deva after being killed by robbers) does not resolve to a name I can independently confirm -- it may be 'යක්ඛ' (Yakkha), 'ජට' (Jata), or a similar-looking name; the glyph shape read consistently as 'ජ...ත්ත' rather than 'ය...ක්ඛ' across several independent occurrences, so it was NOT normalized to 'යක්ඛ'. Please check the physical book or Pahan_Kanuwa audio for this page (physical pages 614-617, sermon 26) to confirm the correct name.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_06",
+    "page_image": "page_0050.png",
+    "book_page": 694,
+    "context": "Jataka verse quoted by the Bodhisatta-as-teacher in Sermon 29's second story (the lazy pupil who fell asleep gathering salwood/firewood): 'යො පුබ්බෙ කරණීයානි පච්ඡා සො කාතුමිච්ඡති වරණකට්ඨස්ස සෙසෝච ස පච්ඡා මනුතප්පති'.",
+    "issue": "This is a less common Jataka-collection verse (not one of the well-known Dhammapada verses), and the scan of this particular quatrain was not fully sharp -- the transcription is a best-effort normalization of the printed Pali, not a verified quotation against a Tipitaka source. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 694, sermon 29) to confirm the exact wording, especially the third line 'වරණකට්ඨස්ස සෙසෝච'.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_07",
+    "page_image": "page_0001.png-page_0002.png",
+    "book_page": null,
+    "context": "Cover and title-page (page i) author credit: 'කටුකුරුන්දේ [...] හික්ෂු', where [...] reads roughly as 'කඳුනනද'/'කදුනනද'.",
+    "issue": "Unlike Volumes 1-6, this volume's title page is set in plain (non-italic, non-decorative) bold type, yet the author's given name still does not resolve cleanly to 'ඤාණානන්ද' -- it reads closer to 'කඳුනනද' or 'කදුනනද'. Transcribed as 'කටුකුරුන්දේ ඤාණානන්ද භික්ෂු' for series consistency, supported by this volume's own listed author website 'www.seeingthroughthenet.net' (matching the real Ven. Katukurunde Ñāṇānanda's site), but the exact glyphs were not independently confirmed. Please check the physical book cover/title page.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_07",
+    "page_image": "page_0021.png",
+    "book_page": 767,
+    "context": "Sermon 32's epigraph verses (on the Dabba Mallaputta parinibbana-by-fire story), sourced as 'Udana, Pataligamiyavagga': 'අයොසන හතසෙසො ජලතො ජාතවෙදසො / අනුප්පුබ්බූපසන්තස්ස යථා න ඤායතේ ගති' and 'ඒවං සම්මා විමුත්තානං කාම බන්ධෝඝතාරිනං / පඤ්ඤාපේතුං ගති නත්ථි පත්තානං අචලං සුඛං'.",
+    "issue": "This is a two-stanza Udana verse associated with Dabba Mallaputta's self-cremation parinibbana, but the transcription is a best-effort reading of unclear print/scan quality and was NOT matched with confidence against a known Tipitaka source text (unlike most other verses in this series, which were cross-checked against recognized Dhammapada/Udana passages). The first line in particular ('අයොසන හතසෙසො') is uncertain. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 767, sermon 32) to confirm the exact Pali wording.",
+    "status": "needs manual correction"
+  },
+  {
+    "book": "pahankanuwa_07",
+    "page_image": "page_0040.png",
+    "book_page": 807,
+    "context": "Sermon 33, Udana verse quoted after the discussion of sankhata/asankhata (identified in the sermon as spoken at the Neranjara riverbank shortly after the Enlightenment): 'අයං ලොකො සන්තාපජාතො ඵස්සපටිබද්ධො රොගං වදති අත්තතො / යෙන යෙන හි මඤ්ඤති තතො තං හොති අඤ්ඤථා / අඤ්ඤථාභාවී භවසත්තො ලොකො භවපරෙතො භවමෙවාභිනන්දති / යදභිනන්දති තං භයං, යස්ස භායති තං දුක්ඛං / භවවිප්පහානාය ඛො පනිදං බ්‍රහ්මචරියං වුස්සති'.",
+    "issue": "This is recognized as Udana 3.10 (Loka Sutta). The scan/print on this page was not fully sharp, so the transcription was normalized to match the standard Pali wording of this known sutta rather than transcribed as a literal uncertain reading. Please check the physical book or Pahan_Kanuwa audio for this page (physical page 807, sermon 33) to confirm the exact printed diacritics/spelling match the source.",
+    "status": "needs manual correction"
+  }
+]
