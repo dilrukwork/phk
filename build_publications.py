@@ -393,8 +393,8 @@ body {{
         font-size: 10pt;
     }}
 }}
-.page-break {{
-    page-break-after: always;
+.section-chunk + .section-chunk {{
+    break-before: page;
 }}
 img.dhammacakka {{
     display: block;
@@ -408,9 +408,7 @@ img.dhammacakka {{
 
     for i, chunk in enumerate(chunks):
         chunk_html = chunk.replace('images/dhammawheel.png', f'file://{RESOURCES_DIR / DHAMMAWHEEL_FILE}')
-        html_pieces.append(f'<div>{chunk_html}</div>')
-        if i < len(chunks) - 1:
-            html_pieces.append('<div class="page-break"></div>')
+        html_pieces.append(f'<div class="section-chunk">{chunk_html}</div>')
 
     html_pieces.append('</body></html>')
     full_html = '\n'.join(html_pieces)
