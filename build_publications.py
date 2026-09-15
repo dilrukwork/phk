@@ -285,17 +285,32 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         f"  font-weight: normal;\n"
         f"  font-style: normal;\n"
         f"}}\n\n"
-        f"html, body {{\n"
-        f'  font-family: "{FONT_FAMILY}", serif;\n'
+        f"html, body, p, div, h1, h2, h3, h4, span, li, a {{\n"
+        f'  font-family: "{FONT_FAMILY}", serif !important;\n'
         f"}}\n"
     )
 
     book = epub.EpubBook()
     book.set_identifier(f"dhammabooks-{name}{suffix}-{uuid.uuid4()}")
-    title = f"පහන් කණුව ධම් දේශනා 1 - වෙළුම{f' ({label})' if label else ''}"
-    book.set_title(title)
+
+    if name == "phk1":
+        sinhala_title = "පහන් කණුව ධර්ම දේශනා - 1"
+        sinhala_author = "පූජ්‍ය කටුකුරුන්දේ ඥාණානන්ද ස්වාමීන් වහන්සේ"
+        fallback_title = "Pahan kanuwa dhamma deshana - 1"
+        fallback_author = "Ven. Katukurunde Nnanananda Thero"
+    else:
+        num = name.replace("phk", "")
+        sinhala_title = f"පහන් කණුව ධර්ම දේශනා - {num}"
+        sinhala_author = "පූජ්‍ය කටුකුරුන්දේ ඥාණානන්ද ස්වාමීන් වහන්සේ"
+        fallback_title = f"Pahan kanuwa dhamma deshana - {num}"
+        fallback_author = "Ven. Katukurunde Nnanananda Thero"
+
+    book.set_title(sinhala_title)
     book.set_language(BOOK_LANGUAGE)
-    book.add_author(BOOK_AUTHOR)
+    book.add_author(sinhala_author)
+
+    book.add_metadata('DC', 'title', fallback_title)
+    book.add_metadata('DC', 'creator', fallback_author)
 
     if cover_bytes is not None:
         book.set_cover("images/cover.jpg", cover_bytes)
@@ -309,7 +324,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     font_item = epub.EpubItem(
         uid="sinhala_font",
         file_name=f"fonts/{FONT_FILE}",
-        media_type="application/x-font-ttf",
+        media_type="font/ttf",
         content=(FONTS_DIR / FONT_FILE).read_bytes(),
     )
     book.add_item(css_item)
