@@ -294,23 +294,16 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     book.set_identifier(f"dhammabooks-{name}{suffix}-{uuid.uuid4()}")
 
     if name == "phk1":
-        sinhala_title = "පහන් කණුව ධර්ම දේශනා - 1"
-        sinhala_author = "පූජ්‍ය කටුකුරුන්දේ ඥාණානන්ද ස්වාමීන් වහන්සේ"
-        fallback_title = "Pahan kanuwa dhamma deshana - 1"
-        fallback_author = "Ven. Katukurunde Nnanananda Thero"
+        english_title = "Pahan kanuwa dhamma deshana - 1"
+        english_author = "Ven. Katukurunde Nnanananda Thero"
     else:
         num = name.replace("phk", "")
-        sinhala_title = f"පහන් කණුව ධර්ම දේශනා - {num}"
-        sinhala_author = "පූජ්‍ය කටුකුරුන්දේ ඥාණානන්ද ස්වාමීන් වහන්සේ"
-        fallback_title = f"Pahan kanuwa dhamma deshana - {num}"
-        fallback_author = "Ven. Katukurunde Nnanananda Thero"
+        english_title = f"Pahan kanuwa dhamma deshana - {num}"
+        english_author = "Ven. Katukurunde Nnanananda Thero"
 
-    book.set_title(sinhala_title)
+    book.set_title(english_title)
     book.set_language(BOOK_LANGUAGE)
-    book.add_author(sinhala_author)
-
-    book.add_metadata('DC', 'title', fallback_title)
-    book.add_metadata('DC', 'creator', fallback_author)
+    book.add_author(english_author)
 
     if cover_bytes is not None:
         book.set_cover("images/cover.jpg", cover_bytes)
@@ -375,9 +368,28 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     epub.write_epub(epub_path, book)
     print(f"[EPUB] {name}: {len(chunks)} section(s) -> {epub_path} ({epub_path.stat().st_size / 1024:.1f} KB)")
 
-    # 1. Convert to MOBI via ebook-convert
+    # Ensure system font cache has Noto Serif Sinhala installed for Calibre
+    user_fonts = Path.home() / ".local" / "share" / "fonts"
+    user_fonts.mkdir(parents=True, exist_ok=True)
+    target_font = user_fonts / FONT_FILE
+    if not target_font.exists():
+        import shutil
+        shutil.copy(FONTS_DIR / FONT_FILE, target_font)
+        subprocess.run(["fc-cache", "-f"], capture_output=True)
+
+    # 1. Convert to MOBI via ebook-convert (with KF8 support and embedded Sinhala font family)
     mobi_path = PUBLISHED_DIR / f"{name}{suffix}.mobi"
-    res = subprocess.run(["ebook-convert", str(epub_path), str(mobi_path)], capture_output=True, text=True)
+    res = subprocess.run(
+        [
+            "ebook-convert",
+            str(epub_path),
+            str(mobi_path),
+            "--mobi-file-type=both",
+            f"--embed-font-family={FONT_FAMILY}",
+        ],
+        capture_output=True,
+        text=True,
+    )
     if res.returncode == 0:
         print(f"[MOBI] {name} -> {mobi_path} ({mobi_path.stat().st_size / 1024:.1f} KB)")
     else:
