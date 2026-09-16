@@ -302,7 +302,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         english_author = "Ven. Katukurunde Nnanananda Thero"
 
     book.set_title(english_title)
-    book.set_language(BOOK_LANGUAGE)
+    book.set_language("en")
     book.add_author(english_author)
 
     if cover_bytes is not None:
@@ -386,6 +386,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
             str(mobi_path),
             "--mobi-file-type=both",
             f"--embed-font-family={FONT_FAMILY}",
+            "--language=en",
         ],
         capture_output=True,
         text=True,
