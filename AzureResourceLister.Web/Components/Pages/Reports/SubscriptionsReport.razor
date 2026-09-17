@@ -1,0 +1,171 @@
+@page "/reports/subscriptions"
+@using System.Globalization
+@using System.Text
+@inject ReportService ReportService
+@inject IJSRuntime JS
+
+<PageTitle>Subscriptions Report</PageTitle>
+
+<h1>Subscriptions Report</h1>
+
+<div class="filter-bar">
+    <div class="filter-group">
+        <label>Year:</label>
+        <select class="form-input" @bind="_selectedYear" @bind:after="RunReportAsync">
+            @foreach (var year in _filterOptions.Years)
+            {
+                <option value="@year">@year</option>
+            }
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <label>Month:</label>
+        <select class="form-input" @bind="_selectedMonth" @bind:after="RunReportAsync">
+            @foreach (var (num, name) in _months)
+            {
+                <option value="@num">@name</option>
+            }
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <label>Category:</label>
+        <select class="form-input" @bind="_selectedCategory" @bind:after="RunReportAsync">
+            <option value="">All Categories</option>
+            @foreach (var cat in _categories)
+            {
+                <option value="@cat">@cat</option>
+            }
+        </select>
+    </div>
+
+    <button class="btn btn-export" @onclick="ExportCsvAsync" disabled="@_exporting">
+        @(_exporting ? "Exporting..." : "⬇ Export CSV")
+    </button>
+</div>
+
+@if (_loading)
+{
+    <p><em>Loading report...</em></p>
+}
+else if (_rows.Count == 0)
+{
+    <p class="no-data">No cost data found for the selected period/category.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Subscription</th>
+                <th>Environment</th>
+                <th class="col-cost">Total Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in _rows)
+            {
+                <tr>
+                    <td>@row.SubscriptionName</td>
+                    <td>@row.EnvironmentName</td>
+                    <td class="col-cost">@row.TotalCost.ToString("C2", _culture)</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="grand-total-row">
+                <td colspan="2"><strong>Grand Total</strong></td>
+                <td class="col-cost"><strong>@_grandTotal.ToString("C2", _culture)</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+}
+
+@code {
+    private readonly CultureInfo _culture = CultureInfo.GetCultureInfo("en-US");
+
+    private ReportFilterOptions _filterOptions = new();
+    private List<string> _categories = [];
+    private List<(int Num, string Name)> _months = [];
+
+    private int _selectedYear = DateTime.Today.Year;
+    private int _selectedMonth = DateTime.Today.Month;
+    private string _selectedCategory = string.Empty;
+
+    private List<SubscriptionCostRow> _rows = [];
+    private decimal _grandTotal;
+
+    private bool _loading = true;
+    private bool _exporting;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _months = Enumerable.Range(1, 12)
+            .Select(m => (m, DateTimeFormatInfo.CurrentInfo.GetMonthName(m)))
+            .ToList();
+
+        _filterOptions = await ReportService.GetFilterOptionsAsync();
+        _categories = await ReportService.GetCategoriesAsync();
+
+        if (_filterOptions.Years.Count > 0 && !_filterOptions.Years.Contains(_selectedYear))
+        {
+            _selectedYear = _filterOptions.Years[0];
+        }
+
+        await RunReportAsync();
+    }
+
+    private async Task RunReportAsync()
+    {
+        _loading = true;
+        try
+        {
+            _rows = await ReportService.GetSubscriptionCostsAsync(
+                _selectedYear,
+                _selectedMonth,
+                string.IsNullOrWhiteSpace(_selectedCategory) ? null : _selectedCategory);
+
+            _grandTotal = _rows.Sum(r => r.TotalCost);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task ExportCsvAsync()
+    {
+        _exporting = true;
+        try
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(CsvRow(["Subscription", "Environment", "Total Cost"]));
+
+            foreach (var row in _rows)
+            {
+                sb.AppendLine(CsvRow([
+                    row.SubscriptionName,
+                    row.EnvironmentName,
+                    row.TotalCost.ToString("F2", CultureInfo.InvariantCulture)
+                ]));
+            }
+
+            sb.AppendLine(CsvRow([
+                "Grand Total",
+                "",
+                _grandTotal.ToString("F2", CultureInfo.InvariantCulture)
+            ]));
+
+            var filename = $"subscriptions-report-{_selectedYear}-{_selectedMonth:D2}.csv";
+            await JS.InvokeVoidAsync("downloadCsv", filename, sb.ToString());
+        }
+        finally
+        {
+            _exporting = false;
+        }
+    }
+
+    private static string CsvRow(IEnumerable<string> cells) =>
+        string.Join(",", cells.Select(c => $"\"{c.Replace("\"", "\"\"")}\""));
+}

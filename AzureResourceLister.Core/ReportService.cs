@@ -17,6 +17,17 @@ public class ReportService
 
     // ── Filter options ─────────────────────────────────────────────────────────
 
+    public async Task<List<string>> GetCategoriesAsync()
+    {
+        using var db = await _dbFactory.CreateDbContextAsync();
+        return await db.Meters
+            .Select(m => m.MeterCategory)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct()
+            .OrderBy(c => c)
+            .ToListAsync();
+    }
+
     public async Task<ReportFilterOptions> GetFilterOptionsAsync()
     {
         using var db = await _dbFactory.CreateDbContextAsync();
@@ -409,5 +420,52 @@ public class ReportService
             Rows         = rows,
             GrandTotal   = rows.Sum(r => r.TotalCost),
         };
+    }
+
+    // ── Subscriptions report ───────────────────────────────────────────────────
+
+    public async Task<List<SubscriptionCostRow>> GetSubscriptionCostsAsync(int year, int month, string? category = null)
+    {
+        using var db = await _dbFactory.CreateDbContextAsync();
+
+        var startDate = new DateTime(year, month, 1);
+        var endDate   = startDate.AddMonths(1);
+
+        var query =
+            from s in db.Subscriptions
+            join env in db.AzureEnvironments on s.EnvironmentId equals env.Id
+            join r in db.Resources on s.Id equals r.SubscriptionId
+            join rc in db.ResourceCosts on r.Id equals rc.ResourceDbId
+            join m in db.Meters on rc.MeterId equals m.Id
+            where rc.BillingPeriodStart >= startDate
+               && rc.BillingPeriodStart < endDate
+            select new
+            {
+                s.SubscriptionName,
+                env.EnvironmentName,
+                m.MeterCategory,
+                rc.Cost,
+            };
+
+        if (!string.IsNullOrWhiteSpace(category))
+        {
+            query = query.Where(x => x.MeterCategory == category);
+        }
+
+        var raw = await query.ToListAsync();
+
+        var rows = raw
+            .GroupBy(x => new { x.SubscriptionName, x.EnvironmentName })
+            .Select(g => new SubscriptionCostRow
+            {
+                SubscriptionName = g.Key.SubscriptionName,
+                EnvironmentName  = g.Key.EnvironmentName,
+                TotalCost        = g.Sum(x => x.Cost),
+            })
+            .OrderByDescending(r => r.TotalCost)
+            .ThenBy(r => r.SubscriptionName)
+            .ToList();
+
+        return rows;
     }
 }
