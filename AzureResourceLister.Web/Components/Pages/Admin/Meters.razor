@@ -1,0 +1,185 @@
+@page "/admin/meters"
+@using System.Text
+@inject MeterAdminService AdminService
+@inject BillingImportService ImportService
+@inject AppConfig Config
+@inject IJSRuntime JS
+
+<PageTitle>Meters</PageTitle>
+
+<h1>Meters</h1>
+
+<div class="toolbar">
+    <button class="btn btn-primary" @onclick="ImportAsync" disabled="@_importing">
+        @(_importing ? "Importing..." : "Import Meters")
+    </button>
+</div>
+
+@if (_status is not null)
+{
+    <p class="status-text">@_status</p>
+}
+
+@if (_error is not null)
+{
+    <div class="alert alert-danger">@_error</div>
+}
+
+<div class="toolbar">
+    <input class="form-input search-input"
+           placeholder="Search by category, subcategory, or name..."
+           @bind="_searchTerm"
+           @bind:event="oninput"
+           @onkeyup="OnSearchKeyUp" />
+    <button class="btn btn-primary" @onclick="SearchAsync">Search</button>
+    @if (!string.IsNullOrWhiteSpace(_searchTerm))
+    {
+        <button class="btn-link" @onclick="ClearSearchAsync">Clear</button>
+    }
+    <button class="btn btn-export" @onclick="ExportCsvAsync" disabled="@_exporting">
+        @(_exporting ? "Exporting..." : "⬇ Export CSV")
+    </button>
+</div>
+
+@if (_loading)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p class="result-count">@_page.TotalCount total meter(s) — page @_page.PageNumber of @Math.Max(_page.TotalPages, 1)</p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Subcategory</th>
+                <th>Name</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in _page.Items)
+            {
+                <tr>
+                    <td>@row.MeterCategory</td>
+                    <td>@row.MeterSubCategory</td>
+                    <td>@row.MeterName</td>
+                    <td>@row.UnitOfMeasure</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button class="btn-link" disabled="@(_page.PageNumber <= 1)" @onclick="() => GoToPageAsync(_page.PageNumber - 1)">&laquo; Previous</button>
+        <span>Page @_page.PageNumber of @Math.Max(_page.TotalPages, 1)</span>
+        <button class="btn-link" disabled="@(_page.PageNumber >= _page.TotalPages)" @onclick="() => GoToPageAsync(_page.PageNumber + 1)">Next &raquo;</button>
+    </div>
+}
+
+@code {
+    private const int PageSize = 50;
+
+    private PagedResult<MeterRow> _page = new();
+    private string _searchTerm = string.Empty;
+    private bool _loading = true;
+    private string? _error;
+
+    private bool _importing;
+    private string? _status;
+
+    private bool _exporting;
+
+    protected override async Task OnInitializedAsync() => await LoadPageAsync(1);
+
+    private async Task LoadPageAsync(int pageNumber)
+    {
+        _loading = true;
+        _error = null;
+        try
+        {
+            _page = await AdminService.GetPagedAsync(pageNumber, PageSize, _searchTerm);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task GoToPageAsync(int pageNumber) => await LoadPageAsync(pageNumber);
+
+    private async Task SearchAsync() => await LoadPageAsync(1);
+
+    private async Task ClearSearchAsync()
+    {
+        _searchTerm = string.Empty;
+        await LoadPageAsync(1);
+    }
+
+    private async Task OnSearchKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await SearchAsync();
+    }
+
+    private async Task ImportAsync()
+    {
+        _importing = true;
+        _error = null;
+        _status = "Importing...";
+        StateHasChanged();
+
+        try
+        {
+            var summary = await ImportService.SyncMetersAsync(Config.BillingSheetPath);
+            _status = $"Import successful — {summary.MetersInserted} new meter(s), {summary.MetersAlreadyExisted} already existed.";
+            await LoadPageAsync(1);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            _status = null;
+        }
+        finally
+        {
+            _importing = false;
+        }
+    }
+
+    private async Task ExportCsvAsync()
+    {
+        _exporting = true;
+        StateHasChanged();
+
+        try
+        {
+            var all = await AdminService.GetPagedAsync(1, int.MaxValue, _searchTerm);
+
+            var sb = new StringBuilder();
+            sb.AppendLine(CsvRow(["Category", "Subcategory", "Name", "Unit"]));
+
+            foreach (var row in all.Items)
+            {
+                sb.AppendLine(CsvRow([row.MeterCategory, row.MeterSubCategory, row.MeterName, row.UnitOfMeasure]));
+            }
+
+            await JS.InvokeVoidAsync("downloadCsv", "meters.csv", sb.ToString());
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _exporting = false;
+        }
+    }
+
+    private static string CsvRow(IEnumerable<string> cells) =>
+        string.Join(",", cells.Select(c => $"\"{c.Replace("\"", "\"\"")}\""));
+}

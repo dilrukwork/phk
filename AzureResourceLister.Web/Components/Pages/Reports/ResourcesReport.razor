@@ -1,0 +1,299 @@
+@page "/reports/resources"
+@using System.Text
+@inject ReportService ReportSvc
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<PageTitle>Resources — Cost Report</PageTitle>
+
+<h1>Resources</h1>
+
+@* ── Application drill-down banner ────────────────────────────────────────── *@
+@if (!string.IsNullOrWhiteSpace(_filter.ApplicationName))
+{
+    <div class="drill-down-banner">
+        Showing resources for: <strong>@_filter.ApplicationName</strong>
+        <button class="btn-link" @onclick="ClearApplicationFilter">Clear</button>
+    </div>
+}
+
+@* ── Filter bar ────────────────────────────────────────────────────────────── *@
+<div class="filter-bar">
+    <label class="filter-item">
+        Year
+        <select @bind="_filter.Year">
+            @foreach (var y in _filterOptions.Years)
+            {
+                <option value="@y">@y</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Month
+        <select @bind="_filter.Month">
+            @for (int m = 1; m <= 12; m++)
+            {
+                var month = m;
+                <option value="@month">@MonthName(month)</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Owner
+        <select @bind="_filter.OwnerName">
+            <option value="">All owners</option>
+            @foreach (var o in _filterOptions.Owners)
+            {
+                <option value="@o">@o</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Cost Centre
+        <select @bind="_filter.CostCentre">
+            <option value="">All cost centres</option>
+            @foreach (var cc in _filterOptions.CostCentres)
+            {
+                <option value="@cc">@cc</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Subscription
+        <select @bind="_filter.SubscriptionName">
+            <option value="">All subscriptions</option>
+            @foreach (var s in _filterOptions.Subscriptions)
+            {
+                <option value="@s">@s</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Environment
+        <select @bind="_filter.EnvironmentName">
+            <option value="">All environments</option>
+            @foreach (var e in _filterOptions.Environments)
+            {
+                <option value="@e">@e</option>
+            }
+        </select>
+    </label>
+
+    <button class="btn btn-primary" @onclick="RunReportAsync" disabled="@_loading">
+        @(_loading ? "Loading..." : "Run Report")
+    </button>
+</div>
+
+@if (_error is not null)
+{
+    <div class="alert alert-danger">@_error</div>
+}
+
+@* ── Search + options bar ──────────────────────────────────────────────────── *@
+@if (_report is not null && _report.Rows.Count > 0)
+{
+    <div class="search-bar">
+        <input class="search-input" placeholder="Search resource name..."
+               @bind="_searchText" @bind:event="oninput" />
+        @if (!string.IsNullOrWhiteSpace(_searchText))
+        {
+            <button class="btn-link" @onclick="() => _searchText = string.Empty">Clear</button>
+        }
+        <label class="zero-cost-toggle">
+            <input type="checkbox" @bind="_showZeroCost" />
+            Show zero-cost resources
+        </label>
+        <button class="btn btn-export" @onclick="ExportCsvAsync">⬇ Export CSV</button>
+    </div>
+}
+
+@if (_report is not null)
+{
+    <div class="report-summary">
+        Total: <strong>@FormatCost(FilteredTotal)</strong>
+        &nbsp;·&nbsp; @FilteredRows.Count() resource(s)
+        @if (FilteredRows.Count() > PageSize)
+        {
+            <span>&nbsp;·&nbsp; Page @_page of @TotalPages</span>
+        }
+    </div>
+
+    @if (!FilteredRows.Any())
+    {
+        <p class="no-data">No cost data found for the selected period and filters.</p>
+    }
+    else
+    {
+        <div class="table-wrapper">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="col-name">Resource</th>
+                        <th rowspan="2" class="col-type">Type</th>
+                        <th rowspan="2" class="col-sub">Subscription</th>
+                        <th colspan="@_report.Environments.Count" class="col-cost-group">Monthly Cost</th>
+                        <th rowspan="2" class="col-total">Total</th>
+                        <th rowspan="2" class="col-owner">Owner</th>
+                        <th rowspan="2" class="col-cc">Cost Centre</th>
+                    </tr>
+                    <tr>
+                        @foreach (var env in _report.Environments)
+                        {
+                            <th class="col-env">@env</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in PagedRows)
+                    {
+                        <tr>
+                            <td class="col-name">@row.ResourceName</td>
+                            <td class="col-type">@row.MeterCategory</td>
+                            <td class="col-sub">@row.SubscriptionName</td>
+                            @foreach (var env in _report.Environments)
+                            {
+                                <td class="col-cost">@FormatCost(row.CostByEnvironment.GetValueOrDefault(env))</td>
+                            }
+                            <td class="col-total">@FormatCost(row.TotalCost)</td>
+                            <td class="col-owner">@row.OwnerName</td>
+                            <td class="col-cc">@row.CostCentre</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (TotalPages > 1)
+        {
+            <div class="pagination">
+                <button class="btn-link" disabled="@(_page <= 1)" @onclick="PrevPage">&laquo; Prev</button>
+                <span>Page @_page of @TotalPages</span>
+                <button class="btn-link" disabled="@(_page >= TotalPages)" @onclick="NextPage">Next &raquo;</button>
+            </div>
+        }
+    }
+}
+
+@code {
+    private const int PageSize = 200;
+
+    [SupplyParameterFromQuery(Name = "application")]
+    public string? ApplicationParam { get; set; }
+
+    [SupplyParameterFromQuery(Name = "year")]
+    public int? YearParam { get; set; }
+
+    [SupplyParameterFromQuery(Name = "month")]
+    public int? MonthParam { get; set; }
+
+    private ReportFilter        _filter        = new();
+    private ReportFilterOptions _filterOptions = new();
+    private CostReport<ResourceCostRow>? _report;
+    private string  _searchText   = string.Empty;
+    private bool    _showZeroCost = true;  // default — changed per context in OnInitializedAsync
+    private int     _page  = 1;
+    private bool    _loading;
+    private string? _error;
+
+    private IEnumerable<ResourceCostRow> FilteredRows =>
+        (_report?.Rows ?? [])
+        .Where(r => _showZeroCost || Math.Round(r.TotalCost, 0) > 0)
+        .Where(r => string.IsNullOrWhiteSpace(_searchText)
+                 || r.ResourceName.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
+
+    private IEnumerable<ResourceCostRow> PagedRows =>
+        FilteredRows.Skip((_page - 1) * PageSize).Take(PageSize);
+
+    private decimal FilteredTotal => FilteredRows.Sum(r => r.TotalCost);
+
+    private int TotalPages =>
+        (int)Math.Ceiling(FilteredRows.Count() / (double)PageSize);
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(ApplicationParam))
+        {
+            _filter.ApplicationName = Uri.UnescapeDataString(ApplicationParam);
+            _showZeroCost = false; // hide $0 resources by default in drill-down mode
+        }
+
+        if (YearParam.HasValue)  _filter.Year  = YearParam.Value;
+        if (MonthParam.HasValue) _filter.Month = MonthParam.Value;
+
+        try
+        {
+            _filterOptions = await ReportSvc.GetFilterOptionsAsync();
+            if (!_filterOptions.Years.Contains(_filter.Year) && _filterOptions.Years.Count > 0)
+                _filter.Year = _filterOptions.Years[0];
+        }
+        catch (Exception ex) { _error = ex.Message; return; }
+
+        await RunReportAsync();
+    }
+
+    private async Task RunReportAsync()
+    {
+        _loading    = true;
+        _error      = null;
+        _page       = 1;
+        _searchText = string.Empty;
+        StateHasChanged();
+
+        try   { _report = await ReportSvc.GetResourceCostsAsync(_filter); }
+        catch (Exception ex) { _error = ex.Message; }
+        finally { _loading = false; }
+    }
+
+    private void PrevPage() { _page--; }
+    private void NextPage() { _page++; }
+
+    private async Task ClearApplicationFilter()
+    {
+        _filter.ApplicationName = null;
+        _showZeroCost = true;
+        Nav.NavigateTo("/reports/resources", replace: true);
+        await RunReportAsync();
+    }
+
+    private async Task ExportCsvAsync()
+    {
+        if (_report is null) return;
+        var sb = new StringBuilder();
+
+        var headers = new List<string> { "Resource", "Type", "Subscription" };
+        foreach (var env in _report.Environments) headers.Add(env);
+        headers.Add("Total");
+        headers.AddRange(new[] { "Owner", "Cost Centre" });
+        sb.AppendLine(CsvRow(headers));
+
+        foreach (var row in FilteredRows)
+        {
+            var cells = new List<string> { row.ResourceName, row.MeterCategory, row.SubscriptionName };
+            foreach (var env in _report.Environments)
+                cells.Add(Math.Round(row.CostByEnvironment.GetValueOrDefault(env), 0).ToString("N0"));
+            cells.Add(Math.Round(row.TotalCost, 0).ToString("N0"));
+            cells.Add(row.OwnerName);
+            cells.Add(row.CostCentre);
+            sb.AppendLine(CsvRow(cells));
+        }
+
+        var appSuffix = string.IsNullOrWhiteSpace(_filter.ApplicationName)
+            ? "" : $"-{_filter.ApplicationName.Replace(" ", "_")}";
+        await JS.InvokeVoidAsync("downloadCsv",
+            $"resources{appSuffix}-{_filter.Year}-{_filter.Month:D2}.csv",
+            sb.ToString());
+    }
+
+    private static string CsvRow(IEnumerable<string> cells) =>
+        string.Join(",", cells.Select(c => $"\"{c.Replace("\"", "\"\"")}\""));
+
+    private static string FormatCost(decimal amount) => "$" + Math.Round(amount, 0).ToString("N0");
+
+    private static string MonthName(int month) =>
+        System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(month);
+}

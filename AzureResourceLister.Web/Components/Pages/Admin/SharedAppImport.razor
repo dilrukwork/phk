@@ -1,0 +1,66 @@
+@page "/admin/sharedappimport"
+@inject SharedAppImportService ImportService
+@inject AppConfig Config
+
+<PageTitle>Shared App Import</PageTitle>
+
+<h1>Shared App Import</h1>
+
+<p>
+    Imports the shared-app registry CSV at <code>@Config.SharedAppRegistryPath</code> —
+    Application Name, Owner, Azure Resource Name, Subscription, ResourceGroup.
+    Each shared resource's cost is split equally among every application that references it.
+    These links coexist with whatever tag-derived mapping a resource already has;
+    they don't replace it.
+</p>
+
+<div class="toolbar">
+    <button class="btn btn-primary" @onclick="ImportAsync" disabled="@_importing">
+        @(_importing ? "Importing..." : "Import Shared App Registry")
+    </button>
+</div>
+
+@if (_status is not null)
+{
+    <p class="status-text">@_status</p>
+}
+
+@if (_error is not null)
+{
+    <div class="alert alert-danger">@_error</div>
+}
+
+@code {
+    private bool _importing;
+    private string? _status;
+    private string? _error;
+
+    private async Task ImportAsync()
+    {
+        _importing = true;
+        _error = null;
+        _status = "Importing...";
+        StateHasChanged();
+
+        try
+        {
+            var summary = await ImportService.ImportAsync(Config.SharedAppRegistryPath);
+
+            _status = $"Import successful — {summary.ResourcesAffected} resource(s) affected, " +
+                      $"{summary.ResourceAppLinksCreated} application link(s), " +
+                      $"{summary.ApplicationsCreated} new application(s)" +
+                      (summary.ExceptionsLogged > 0
+                          ? $", {summary.ExceptionsLogged} exception(s) logged — see the Shared App Exceptions page."
+                          : ".");
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+            _status = null;
+        }
+        finally
+        {
+            _importing = false;
+        }
+    }
+}
