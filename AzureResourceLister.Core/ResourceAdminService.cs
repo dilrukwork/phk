@@ -45,7 +45,8 @@ public class ResourceAdminService
         int pageSize,
         string? search = null,
         string? categoryFilter = null,
-        string? sourceFilter = null)
+        string? sourceFilter = null,
+        string? subscriptionFilter = null)
     {
         using var db = await _dbFactory.CreateDbContextAsync();
 
@@ -58,6 +59,11 @@ public class ResourceAdminService
                 r.ResourceName.Contains(term) ||
                 r.AzureResourceId.Contains(term) ||
                 r.ResourceGroup.Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(subscriptionFilter) && subscriptionFilter != ResourceImportService.AllSubscriptions)
+        {
+            query = query.Where(r => r.Subscription.AzureSubscriptionId == subscriptionFilter);
         }
 
         if (!string.IsNullOrWhiteSpace(sourceFilter))
