@@ -274,6 +274,9 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     if not chunks:
         raise ValueError("No content left after slicing")
 
+    if '<div class="booktitle">' in chunks[0]:
+        chunks[0] = '<div class="cover-image-container" style="text-align: center;"><img src="images/cover.jpg" alt="Cover" style="max-width: 100%; height: auto;"/></div>'
+
     if page_numbers:
         chunks = [f'{chunk}\n<div class="page-number">{i + 1}</div>' for i, chunk in enumerate(chunks)]
 
@@ -316,12 +319,12 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     book.set_identifier(f"dhammabooks-{name}{suffix}-{uuid.uuid4()}")
 
     if name == "phk1":
-        english_title = "Pahan kanuwa dhamma deshana - 1"
-        english_author = "Ven. Katukurunde Nnanananda Thero"
+        english_title = "Pahankanuwa Sermons - 1"
+        english_author = "Ven. Katukurunde Nanananda Thero"
     else:
         num = name.replace("phk", "")
-        english_title = f"Pahan kanuwa dhamma deshana - {num}"
-        english_author = "Ven. Katukurunde Nnanananda Thero"
+        english_title = f"Pahankanuwa Sermons - {num}"
+        english_author = "Ven. Katukurunde Nanananda Thero"
 
     book.set_title(english_title)
     book.set_language("en-US")
