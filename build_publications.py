@@ -281,11 +281,29 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     font_css = (
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
-        f"  src: url(\"../fonts/{FONT_FILE}\");\n"
-        f"  font-weight: normal;\n"
-        f"  font-style: normal;\n"
+        f'  font-style: normal;\n'
+        f'  font-weight: normal;\n'
+        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
         f"}}\n\n"
-        f"html, body, p, div, h1, h2, h3, h4, span, li, a {{\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: italic;\n'
+        f'  font-weight: normal;\n'
+        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
+        f"}}\n\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: normal;\n'
+        f'  font-weight: bold;\n'
+        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
+        f"}}\n\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: italic;\n'
+        f'  font-weight: bold;\n'
+        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
+        f"}}\n\n"
+        f"* {{\n"
         f'  font-family: "{FONT_FAMILY}", serif !important;\n'
         f"}}\n"
     )
@@ -317,7 +335,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     font_item = epub.EpubItem(
         uid="sinhala_font",
         file_name=f"fonts/{FONT_FILE}",
-        media_type="font/ttf",
+        media_type="application/font-sfnt",
         content=(FONTS_DIR / FONT_FILE).read_bytes(),
     )
     book.add_item(css_item)
@@ -340,7 +358,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         c = epub.EpubHtml(
             title=f"Section {i + 1}",
             file_name=f"chap_{i + 1:03d}.xhtml",
-            lang="en-US",
+            lang="si",
         )
         c.content = (
             f"<html xmlns=\"http://www.w3.org/1999/xhtml\">"
