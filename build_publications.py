@@ -274,19 +274,44 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     if not chunks:
         raise ValueError("No content left after slicing")
 
+    if '<div class="booktitle">' in chunks[0]:
+        chunks[0] = '<div class="cover-image-container" style="text-align: center;"><img src="images/cover.jpg" alt="Cover" style="max-width: 100%; height: auto;"/></div>'
+
     if page_numbers:
         chunks = [f'{chunk}\n<div class="page-number">{i + 1}</div>' for i, chunk in enumerate(chunks)]
+
+    import base64
+    font_bytes = (FONTS_DIR / FONT_FILE).read_bytes()
+    b64_font = base64.b64encode(font_bytes).decode("utf-8")
 
     style_css = (OCR_DIR / "style.css").read_text(encoding="utf-8")
     font_css = (
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
-        f"  src: url(\"../fonts/{FONT_FILE}\");\n"
-        f"  font-weight: normal;\n"
-        f"  font-style: normal;\n"
+        f'  font-style: normal;\n'
+        f'  font-weight: normal;\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
-        f"html, body, p, div, h1, h2, h3, h4, span, li, a {{\n"
-        f'  font-family: "{FONT_FAMILY}", serif !important;\n'
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: italic;\n'
+        f'  font-weight: normal;\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f"}}\n\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: normal;\n'
+        f'  font-weight: bold;\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f"}}\n\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: italic;\n'
+        f'  font-weight: bold;\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f"}}\n\n"
+        f"body, p, div, h1, h2, h3, h4, span, li, a {{\n"
+        f'  font-family: "{FONT_FAMILY}", serif;\n'
         f"}}\n"
     )
 
@@ -294,15 +319,15 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     book.set_identifier(f"dhammabooks-{name}{suffix}-{uuid.uuid4()}")
 
     if name == "phk1":
-        english_title = "Pahan kanuwa dhamma deshana - 1"
-        english_author = "Ven. Katukurunde Nnanananda Thero"
+        english_title = "Pahankanuwa Sermons - 1"
+        english_author = "Ven. Katukurunde Nanananda Thero"
     else:
         num = name.replace("phk", "")
-        english_title = f"Pahan kanuwa dhamma deshana - {num}"
-        english_author = "Ven. Katukurunde Nnanananda Thero"
+        english_title = f"Pahankanuwa Sermons - {num}"
+        english_author = "Ven. Katukurunde Nanananda Thero"
 
     book.set_title(english_title)
-    book.add_metadata('DC', 'language', 'en-US', {'id': 'language'})
+    book.set_language("en-US")
     book.add_author(english_author)
 
     if cover_bytes is not None:
@@ -340,7 +365,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         c = epub.EpubHtml(
             title=f"Section {i + 1}",
             file_name=f"chap_{i + 1:03d}.xhtml",
-            lang="en-US",
+            lang="si",
         )
         c.content = (
             f"<html xmlns=\"http://www.w3.org/1999/xhtml\">"
