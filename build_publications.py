@@ -277,31 +277,35 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     if page_numbers:
         chunks = [f'{chunk}\n<div class="page-number">{i + 1}</div>' for i, chunk in enumerate(chunks)]
 
+    import base64
+    font_bytes = (FONTS_DIR / FONT_FILE).read_bytes()
+    b64_font = base64.b64encode(font_bytes).decode("utf-8")
+
     style_css = (OCR_DIR / "style.css").read_text(encoding="utf-8")
     font_css = (
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: normal;\n'
         f'  font-weight: normal;\n'
-        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: italic;\n'
         f'  font-weight: normal;\n'
-        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: normal;\n'
         f'  font-weight: bold;\n'
-        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: italic;\n'
         f'  font-weight: bold;\n'
-        f"  src: url(\"../fonts/{FONT_FILE}\") format(\"truetype\");\n"
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
         f"}}\n\n"
         f"* {{\n"
         f'  font-family: "{FONT_FAMILY}", serif !important;\n'
