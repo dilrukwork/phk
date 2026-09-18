@@ -22,7 +22,7 @@ PUBLISHED_DIR = REPO_ROOT / "src" / "published"
 FONT_FILE = "NotoSerifSinhala-Regular.ttf"
 FONT_FAMILY = "Noto Serif Sinhala"
 BOOK_AUTHOR = "කටුකුරුන්දේ ඤාණානන්ද භික්ෂු"
-BOOK_LANGUAGE = "si"
+BOOK_LANGUAGE = "en-US"
 
 DHAMMAWHEEL_FILE = "dhammawheel.png"
 DHAMMAWHEEL_MAX_DIM = 300
@@ -302,7 +302,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         english_author = "Ven. Katukurunde Nnanananda Thero"
 
     book.set_title(english_title)
-    book.set_language("en")
+    book.add_metadata('DC', 'language', 'en-US', {'id': 'language'})
     book.add_author(english_author)
 
     if cover_bytes is not None:
@@ -340,7 +340,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         c = epub.EpubHtml(
             title=f"Section {i + 1}",
             file_name=f"chap_{i + 1:03d}.xhtml",
-            lang=BOOK_LANGUAGE,
+            lang="en-US",
         )
         c.content = (
             f"<html xmlns=\"http://www.w3.org/1999/xhtml\">"
