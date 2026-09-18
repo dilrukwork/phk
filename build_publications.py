@@ -168,19 +168,49 @@ def trim_toc(content: str, toc_limit: int | None, toc_keep: list[int] | None) ->
     )
 
 
-def _fit_font(draw: ImageDraw.ImageDraw, text: str, font_path: Path,
-              max_width: int, start_size: int, min_size: int = 20) -> tuple[ImageFont.FreeTypeFont, int]:
+LATIN_FONT_PATH = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf")
+
+
+def _get_char_font(ch: str, font_path: Path, latin_font_path: Path, size: int) -> ImageFont.FreeTypeFont:
+    if ch.isdigit() or ord(ch) < 128:
+        if latin_font_path.exists():
+            return ImageFont.truetype(str(latin_font_path), size)
+    return ImageFont.truetype(str(font_path), size)
+
+
+def _get_mixed_text_width(text: str, font_path: Path, latin_font_path: Path, size: int) -> int:
+    total_w = 0
+    for ch in text:
+        f = _get_char_font(ch, font_path, latin_font_path, size)
+        left, top, right, bottom = f.getbbox(ch)
+        total_w += (right - left)
+    return total_w
+
+
+def _draw_mixed_text(draw: ImageDraw.ImageDraw, x: int, y: int, text: str,
+                     font_path: Path, latin_font_path: Path, size: int, fill: str = "black") -> int:
+    curr_x = x
+    max_h = 0
+    for ch in text:
+        f = _get_char_font(ch, font_path, latin_font_path, size)
+        left, top, right, bottom = f.getbbox(ch)
+        draw.text((curr_x - left, y), ch, font=f, fill=fill)
+        curr_x += (right - left)
+        if (bottom - top) > max_h:
+            max_h = bottom - top
+    return max_h
+
+
+def _fit_mixed_font_size(text: str, font_path: Path, latin_font_path: Path,
+                         max_width: int, start_size: int, min_size: int = 20) -> tuple[int, int]:
     size = start_size
     while size > min_size:
-        font = ImageFont.truetype(str(font_path), size)
-        left, top, right, bottom = draw.textbbox((0, 0), text, font=font)
-        width = right - left
-        if width <= max_width:
-            return font, width
+        w = _get_mixed_text_width(text, font_path, latin_font_path, size)
+        if w <= max_width:
+            return size, w
         size -= 2
-    font = ImageFont.truetype(str(font_path), min_size)
-    left, top, right, bottom = draw.textbbox((0, 0), text, font=font)
-    return font, right - left
+    w = _get_mixed_text_width(text, font_path, latin_font_path, min_size)
+    return min_size, w
 
 
 def generate_cover_image(title: str, subtitle: str, author: str) -> bytes:
@@ -188,21 +218,21 @@ def generate_cover_image(title: str, subtitle: str, author: str) -> bytes:
     img = Image.new("RGB", (width, height), "white")
     draw = ImageDraw.Draw(img)
     font_path = FONTS_DIR / FONT_FILE
+    latin_font_path = LATIN_FONT_PATH
     max_width = width - 240
 
-    title_font, title_w = _fit_font(draw, title, font_path, max_width, 120)
-    subtitle_font, subtitle_w = _fit_font(draw, subtitle, font_path, max_width, 76)
-    author_font, author_w = _fit_font(draw, author, font_path, max_width, 56)
+    title_size, title_w = _fit_mixed_font_size(title, font_path, latin_font_path, max_width, 120)
+    subtitle_size, subtitle_w = _fit_mixed_font_size(subtitle, font_path, latin_font_path, max_width, 76)
+    author_size, author_w = _fit_mixed_font_size(author, font_path, latin_font_path, max_width, 56)
 
     y = height * 0.30
-    draw.text(((width - title_w) / 2, y), title, font=title_font, fill="black")
-    _, top, _, bottom = draw.textbbox((0, 0), title, font=title_font)
-    y += (bottom - top) * 1.6
+    h_title = _draw_mixed_text(draw, (width - title_w) / 2, y, title, font_path, latin_font_path, title_size)
+    y += max(h_title, title_size) * 1.6
 
-    draw.text(((width - subtitle_w) / 2, y), subtitle, font=subtitle_font, fill="black")
+    _draw_mixed_text(draw, (width - subtitle_w) / 2, y, subtitle, font_path, latin_font_path, subtitle_size)
 
     y_author = height * 0.85
-    draw.text(((width - author_w) / 2, y_author), author, font=author_font, fill="black")
+    _draw_mixed_text(draw, (width - author_w) / 2, y_author, author, font_path, latin_font_path, author_size)
 
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=92)
