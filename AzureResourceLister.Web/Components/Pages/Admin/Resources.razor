@@ -12,7 +12,7 @@
 <div class="toolbar">
     <label class="subscription-label">
         Subscription:
-        <select class="form-input subscription-select" @bind="_selectedSubscriptionId">
+        <select class="form-input subscription-select" @bind="_selectedSubscriptionId" @bind:after="SearchAsync">
             <option value="@ResourceImportService.AllSubscriptions">All subscriptions</option>
             @foreach (var sub in _subscriptions)
             {
@@ -182,7 +182,8 @@ else
                 PageSize,
                 _searchTerm,
                 string.IsNullOrWhiteSpace(_selectedCategory) ? null : _selectedCategory,
-                string.IsNullOrWhiteSpace(_selectedSource) ? null : _selectedSource);
+                string.IsNullOrWhiteSpace(_selectedSource) ? null : _selectedSource,
+                _selectedSubscriptionId);
         }
         catch (Exception ex)
         {
@@ -271,7 +272,8 @@ else
                 int.MaxValue,
                 _searchTerm,
                 string.IsNullOrWhiteSpace(_selectedCategory) ? null : _selectedCategory,
-                string.IsNullOrWhiteSpace(_selectedSource) ? null : _selectedSource);
+                string.IsNullOrWhiteSpace(_selectedSource) ? null : _selectedSource,
+                _selectedSubscriptionId);
 
             var sb = new StringBuilder();
             sb.AppendLine(CsvRow([
