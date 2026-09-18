@@ -9,9 +9,9 @@
 <h1>Subscriptions Report</h1>
 
 <div class="filter-bar">
-    <div class="filter-group">
+    <div class="filter-item">
         <label>Year:</label>
-        <select class="form-input" @bind="_selectedYear" @bind:after="RunReportAsync">
+        <select @bind="_selectedYear" @bind:after="RunReportAsync">
             @foreach (var year in _filterOptions.Years)
             {
                 <option value="@year">@year</option>
@@ -19,9 +19,9 @@
         </select>
     </div>
 
-    <div class="filter-group">
+    <div class="filter-item">
         <label>Month:</label>
-        <select class="form-input" @bind="_selectedMonth" @bind:after="RunReportAsync">
+        <select @bind="_selectedMonth" @bind:after="RunReportAsync">
             @foreach (var (num, name) in _months)
             {
                 <option value="@num">@name</option>
@@ -29,14 +29,23 @@
         </select>
     </div>
 
-    <div class="filter-group">
+    <div class="filter-item">
         <label>Category:</label>
-        <select class="form-input" @bind="_selectedCategory" @bind:after="RunReportAsync">
+        <select @bind="_selectedCategory" @bind:after="RunReportAsync">
             <option value="">All Categories</option>
             @foreach (var cat in _categories)
             {
                 <option value="@cat">@cat</option>
             }
+        </select>
+    </div>
+
+    <div class="filter-item">
+        <label>Cost Mode:</label>
+        <select @bind="_costMode">
+            <option value="Actual">Actual Cost</option>
+            <option value="Payg">PAYG Cost</option>
+            <option value="Both">Both (With Savings)</option>
         </select>
     </div>
 
@@ -60,7 +69,20 @@ else
             <tr>
                 <th>Subscription</th>
                 <th>Environment</th>
-                <th class="col-cost">Total Cost</th>
+                @if (_costMode == "Actual")
+                {
+                    <th class="col-cost">Actual Cost</th>
+                }
+                else if (_costMode == "Payg")
+                {
+                    <th class="col-cost">PAYG Cost</th>
+                }
+                else
+                {
+                    <th class="col-cost">Actual Cost</th>
+                    <th class="col-cost">PAYG Cost</th>
+                    <th class="col-cost">Savings</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -69,14 +91,40 @@ else
                 <tr>
                     <td>@row.SubscriptionName</td>
                     <td>@row.EnvironmentName</td>
-                    <td class="col-cost">@row.TotalCost.ToString("C2", _culture)</td>
+                    @if (_costMode == "Actual")
+                    {
+                        <td class="col-cost">@row.ActualCost.ToString("C2", _culture)</td>
+                    }
+                    else if (_costMode == "Payg")
+                    {
+                        <td class="col-cost">@row.PaygCost.ToString("C2", _culture)</td>
+                    }
+                    else
+                    {
+                        <td class="col-cost">@row.ActualCost.ToString("C2", _culture)</td>
+                        <td class="col-cost">@row.PaygCost.ToString("C2", _culture)</td>
+                        <td class="col-cost col-savings">@row.Savings.ToString("C2", _culture)</td>
+                    }
                 </tr>
             }
         </tbody>
         <tfoot>
             <tr class="grand-total-row">
                 <td colspan="2"><strong>Grand Total</strong></td>
-                <td class="col-cost"><strong>@_grandTotal.ToString("C2", _culture)</strong></td>
+                @if (_costMode == "Actual")
+                {
+                    <td class="col-cost"><strong>@_grandTotalActual.ToString("C2", _culture)</strong></td>
+                }
+                else if (_costMode == "Payg")
+                {
+                    <td class="col-cost"><strong>@_grandTotalPayg.ToString("C2", _culture)</strong></td>
+                }
+                else
+                {
+                    <td class="col-cost"><strong>@_grandTotalActual.ToString("C2", _culture)</strong></td>
+                    <td class="col-cost"><strong>@_grandTotalPayg.ToString("C2", _culture)</strong></td>
+                    <td class="col-cost col-savings"><strong>@_grandTotalSavings.ToString("C2", _culture)</strong></td>
+                }
             </tr>
         </tfoot>
     </table>
@@ -92,9 +140,12 @@ else
     private int _selectedYear = DateTime.Today.Year;
     private int _selectedMonth = DateTime.Today.Month;
     private string _selectedCategory = string.Empty;
+    private string _costMode = "Actual";
 
     private List<SubscriptionCostRow> _rows = [];
-    private decimal _grandTotal;
+    private decimal _grandTotalActual;
+    private decimal _grandTotalPayg;
+    private decimal _grandTotalSavings;
 
     private bool _loading = true;
     private bool _exporting;
@@ -126,7 +177,9 @@ else
                 _selectedMonth,
                 string.IsNullOrWhiteSpace(_selectedCategory) ? null : _selectedCategory);
 
-            _grandTotal = _rows.Sum(r => r.TotalCost);
+            _grandTotalActual  = _rows.Sum(r => r.ActualCost);
+            _grandTotalPayg    = _rows.Sum(r => r.PaygCost);
+            _grandTotalSavings = _rows.Sum(r => r.Savings);
         }
         finally
         {
@@ -140,24 +193,56 @@ else
         try
         {
             var sb = new StringBuilder();
-            sb.AppendLine(CsvRow(["Subscription", "Environment", "Total Cost"]));
 
-            foreach (var row in _rows)
+            if (_costMode == "Actual")
             {
+                sb.AppendLine(CsvRow(["Subscription", "Environment", "Actual Cost"]));
+                foreach (var row in _rows)
+                {
+                    sb.AppendLine(CsvRow([
+                        row.SubscriptionName,
+                        row.EnvironmentName,
+                        row.ActualCost.ToString("F2", CultureInfo.InvariantCulture)
+                    ]));
+                }
+                sb.AppendLine(CsvRow(["Grand Total", "", _grandTotalActual.ToString("F2", CultureInfo.InvariantCulture)]));
+            }
+            else if (_costMode == "Payg")
+            {
+                sb.AppendLine(CsvRow(["Subscription", "Environment", "PAYG Cost"]));
+                foreach (var row in _rows)
+                {
+                    sb.AppendLine(CsvRow([
+                        row.SubscriptionName,
+                        row.EnvironmentName,
+                        row.PaygCost.ToString("F2", CultureInfo.InvariantCulture)
+                    ]));
+                }
+                sb.AppendLine(CsvRow(["Grand Total", "", _grandTotalPayg.ToString("F2", CultureInfo.InvariantCulture)]));
+            }
+            else
+            {
+                sb.AppendLine(CsvRow(["Subscription", "Environment", "Actual Cost", "PAYG Cost", "Savings"]));
+                foreach (var row in _rows)
+                {
+                    sb.AppendLine(CsvRow([
+                        row.SubscriptionName,
+                        row.EnvironmentName,
+                        row.ActualCost.ToString("F2", CultureInfo.InvariantCulture),
+                        row.PaygCost.ToString("F2", CultureInfo.InvariantCulture),
+                        row.Savings.ToString("F2", CultureInfo.InvariantCulture)
+                    ]));
+                }
                 sb.AppendLine(CsvRow([
-                    row.SubscriptionName,
-                    row.EnvironmentName,
-                    row.TotalCost.ToString("F2", CultureInfo.InvariantCulture)
+                    "Grand Total",
+                    "",
+                    _grandTotalActual.ToString("F2", CultureInfo.InvariantCulture),
+                    _grandTotalPayg.ToString("F2", CultureInfo.InvariantCulture),
+                    _grandTotalSavings.ToString("F2", CultureInfo.InvariantCulture)
                 ]));
             }
 
-            sb.AppendLine(CsvRow([
-                "Grand Total",
-                "",
-                _grandTotal.ToString("F2", CultureInfo.InvariantCulture)
-            ]));
-
-            var filename = $"subscriptions-report-{_selectedYear}-{_selectedMonth:D2}.csv";
+            var filename = $"subscriptions-report-{_selectedYear}-{_selectedMonth:D2}-{_costMode.ToLowerInvariant()}.csv";
             await JS.InvokeVoidAsync("downloadCsv", filename, sb.ToString());
         }
         finally

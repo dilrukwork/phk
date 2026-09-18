@@ -444,7 +444,10 @@ public class ReportService
                 s.SubscriptionName,
                 env.EnvironmentName,
                 m.MeterCategory,
+                rc.PricingModel,
                 rc.Cost,
+                rc.Quantity,
+                rc.UnitPrice,
             };
 
         if (!string.IsNullOrWhiteSpace(category))
@@ -456,13 +459,23 @@ public class ReportService
 
         var rows = raw
             .GroupBy(x => new { x.SubscriptionName, x.EnvironmentName })
-            .Select(g => new SubscriptionCostRow
+            .Select(g =>
             {
-                SubscriptionName = g.Key.SubscriptionName,
-                EnvironmentName  = g.Key.EnvironmentName,
-                TotalCost        = g.Sum(x => x.Cost),
+                var actualCost = g.Sum(x => x.Cost);
+                var paygCost = g.Sum(x =>
+                    string.Equals(x.PricingModel, "OnDemand", StringComparison.OrdinalIgnoreCase)
+                        ? x.Cost
+                        : x.Quantity * x.UnitPrice);
+
+                return new SubscriptionCostRow
+                {
+                    SubscriptionName = g.Key.SubscriptionName,
+                    EnvironmentName  = g.Key.EnvironmentName,
+                    ActualCost       = actualCost,
+                    PaygCost         = paygCost,
+                };
             })
-            .OrderByDescending(r => r.TotalCost)
+            .OrderByDescending(r => r.ActualCost)
             .ThenBy(r => r.SubscriptionName)
             .ToList();
 
