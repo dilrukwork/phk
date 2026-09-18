@@ -287,28 +287,28 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: normal;\n'
         f'  font-weight: normal;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: italic;\n'
         f'  font-weight: normal;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: normal;\n'
         f'  font-weight: bold;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: italic;\n'
         f'  font-weight: bold;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype");\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
-        f"* {{\n"
-        f'  font-family: "{FONT_FAMILY}", serif !important;\n'
+        f"body, p, div, h1, h2, h3, h4, span, li, a {{\n"
+        f'  font-family: "{FONT_FAMILY}", serif;\n'
         f"}}\n"
     )
 
@@ -324,7 +324,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         english_author = "Ven. Katukurunde Nnanananda Thero"
 
     book.set_title(english_title)
-    book.add_metadata('DC', 'language', 'en-US', {'id': 'language'})
+    book.set_language("en-US")
     book.add_author(english_author)
 
     if cover_bytes is not None:
@@ -339,7 +339,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     font_item = epub.EpubItem(
         uid="sinhala_font",
         file_name=f"fonts/{FONT_FILE}",
-        media_type="application/font-sfnt",
+        media_type="font/ttf",
         content=(FONTS_DIR / FONT_FILE).read_bytes(),
     )
     book.add_item(css_item)
