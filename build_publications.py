@@ -463,6 +463,34 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     epub.write_epub(epub_path, book)
     print(f"[EPUB] {name}: {len(chunks)} section(s) -> {epub_path} ({epub_path.stat().st_size / 1024:.1f} KB)")
 
+    # Ensure system font cache has Noto Serif Sinhala installed for Calibre
+    user_fonts = Path.home() / ".local" / "share" / "fonts"
+    user_fonts.mkdir(parents=True, exist_ok=True)
+    target_font = user_fonts / FONT_FILE
+    if not target_font.exists():
+        import shutil
+        shutil.copy(FONTS_DIR / FONT_FILE, target_font)
+        subprocess.run(["fc-cache", "-f"], capture_output=True)
+
+    # 1. Convert to MOBI via ebook-convert (with KF8 support and embedded Sinhala font family)
+    mobi_path = PUBLISHED_DIR / f"{name}{suffix}.mobi"
+    res = subprocess.run(
+        [
+            "ebook-convert",
+            str(epub_path),
+            str(mobi_path),
+            "--mobi-file-type=both",
+            f"--embed-font-family={FONT_FAMILY}",
+            "--language=en",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if res.returncode == 0:
+        print(f"[MOBI] {name} -> {mobi_path} ({mobi_path.stat().st_size / 1024:.1f} KB)")
+    else:
+        print(f"[MOBI Error] {res.stderr}")
+
     # Save generated cover image to resources directory for local HTML PDF rendering
     cover_img_path = RESOURCES_DIR / "cover.jpg"
     if cover_bytes:
