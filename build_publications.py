@@ -3,13 +3,16 @@ import io
 import re
 import sys
 import uuid
+import base64
+import subprocess
 from pathlib import Path
 
 from ebooklib import epub
 from PIL import Image, ImageDraw, ImageFont
 from bs4 import BeautifulSoup
 from weasyprint import HTML, CSS
-import subprocess
+from docx import Document
+from docx.shared import Pt, Inches
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -21,7 +24,10 @@ PUBLISHED_DIR = REPO_ROOT / "src" / "published"
 
 FONT_FILE = "NotoSerifSinhala-Regular.ttf"
 FONT_FAMILY = "Noto Serif Sinhala"
-BOOK_AUTHOR = "කටුකුරුන්දේ ඤාණානන්ද භික්ෂු"
+LATIN_FONT_PATH = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf")
+
+BOOK_AUTHOR_SINHALA = "කටුකුරුන්දේ ඤාණානන්ද භික්ෂු"
+BOOK_AUTHOR_ENGLISH = "Ven. Katukurunde Nanananda Thero"
 BOOK_LANGUAGE = "en-US"
 
 DHAMMAWHEEL_FILE = "dhammawheel.png"
@@ -168,9 +174,6 @@ def trim_toc(content: str, toc_limit: int | None, toc_keep: list[int] | None) ->
     )
 
 
-LATIN_FONT_PATH = Path("/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf")
-
-
 def _get_token_font(token: str, sinhala_font_path: Path, latin_font_path: Path, size: int) -> ImageFont.FreeTypeFont:
     if token.isdigit():
         if latin_font_path.exists():
@@ -271,6 +274,33 @@ def chapter_label(chunk: str, index: int) -> str | None:
     return None
 
 
+def convert_to_txt(raw_text: str, out_path: Path) -> None:
+    soup = BeautifulSoup(raw_text, "html.parser")
+    plain_text = soup.get_text(separator="\n\n")
+    plain_text = re.sub(r"<!--.*?-->", "", plain_text, flags=re.S)
+    plain_text = re.sub(r"\n{3,}", "\n\n", plain_text)
+    out_path.write_text(plain_text.strip(), encoding="utf-8")
+
+
+def convert_to_docx(raw_text: str, out_path: Path) -> None:
+    doc = Document()
+    soup = BeautifulSoup(raw_text, "html.parser")
+
+    style = doc.styles['Normal']
+    style.font.name = 'Noto Serif Sinhala'
+    style.font.size = Pt(12)
+
+    for p_elem in soup.find_all(['p', 'h1', 'h2', 'h3', 'div']):
+        text = p_elem.get_text().strip()
+        if not text:
+            continue
+        p = doc.add_paragraph(text)
+        p.paragraph_format.space_after = Pt(6)
+        p.paragraph_format.line_spacing = 1.25
+
+    doc.save(out_path)
+
+
 def build_publications(name: str, start_line: int | None = None, end_line: int | None = None,
                         ranges: list[str] | None = None, suffix: str = "", label: str = "",
                         toc_limit: int | None = None, toc_keep: list[int] | None = None,
@@ -316,15 +346,36 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     if page_numbers:
         chunks = [f'{chunk}\n<div class="page-number">{i + 1}</div>' for i, chunk in enumerate(chunks)]
 
+    font_bytes = (FONTS_DIR / FONT_FILE).read_bytes()
+    b64_font = base64.b64encode(font_bytes).decode("utf-8")
+
     style_css = (OCR_DIR / "style.css").read_text(encoding="utf-8")
     font_css = (
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: normal;\n'
         f'  font-weight: normal;\n'
-        f'  src: url("../fonts/{FONT_FILE}");\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
-        f"html, body, p, div, h1, h2, h3, h4, span, li, a {{\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: italic;\n'
+        f'  font-weight: normal;\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f"}}\n\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: normal;\n'
+        f'  font-weight: bold;\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f"}}\n\n"
+        f"@font-face {{\n"
+        f'  font-family: "{FONT_FAMILY}";\n'
+        f'  font-style: italic;\n'
+        f'  font-weight: bold;\n'
+        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f"}}\n\n"
+        f"body, p, div, h1, h2, h3, h4, span, li, a {{\n"
         f'  font-family: "{FONT_FAMILY}", serif;\n'
         f"}}\n\n"
         f"body {{\n"
@@ -336,16 +387,16 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     book = epub.EpubBook()
     book.set_identifier(f"dhammabooks-{name}{suffix}-{uuid.uuid4()}")
 
-    if name == "phk1":
+    if name in ("phk1", "pahankanuwa_01-ocr"):
         english_title = "Pahankanuwa Sermons - 1"
-        english_author = "Ven. Katukurunde Nanananda Thero"
     else:
-        num = name.replace("phk", "")
+        num = name.replace("phk", "").replace("pahankanuwa_", "").replace("-ocr", "")
         english_title = f"Pahankanuwa Sermons - {num}"
-        english_author = "Ven. Katukurunde Nanananda Thero"
+
+    english_author = BOOK_AUTHOR_ENGLISH
 
     book.set_title(english_title)
-    book.set_language("en-US")
+    book.set_language(BOOK_LANGUAGE)
     book.add_author(english_author, file_as=english_author, role="aut")
     book.add_metadata(None, "meta", "", {"name": "author", "content": english_author})
 
@@ -412,35 +463,7 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     epub.write_epub(epub_path, book)
     print(f"[EPUB] {name}: {len(chunks)} section(s) -> {epub_path} ({epub_path.stat().st_size / 1024:.1f} KB)")
 
-    # Ensure system font cache has Noto Serif Sinhala installed for Calibre
-    user_fonts = Path.home() / ".local" / "share" / "fonts"
-    user_fonts.mkdir(parents=True, exist_ok=True)
-    target_font = user_fonts / FONT_FILE
-    if not target_font.exists():
-        import shutil
-        shutil.copy(FONTS_DIR / FONT_FILE, target_font)
-        subprocess.run(["fc-cache", "-f"], capture_output=True)
-
-    # 1. Convert to MOBI via ebook-convert (with KF8 support and embedded Sinhala font family)
-    mobi_path = PUBLISHED_DIR / f"{name}{suffix}.mobi"
-    res = subprocess.run(
-        [
-            "ebook-convert",
-            str(epub_path),
-            str(mobi_path),
-            "--mobi-file-type=both",
-            f"--embed-font-family={FONT_FAMILY}",
-            "--language=en",
-        ],
-        capture_output=True,
-        text=True,
-    )
-    if res.returncode == 0:
-        print(f"[MOBI] {name} -> {mobi_path} ({mobi_path.stat().st_size / 1024:.1f} KB)")
-    else:
-        print(f"[MOBI Error] {res.stderr}")
-
-    # 2. Convert to PDF via WeasyPrint with embedded Sinhala font
+    # 1. Convert to PDF via WeasyPrint with embedded Sinhala font
     html_pieces = [f'''<!DOCTYPE html>
 <html>
 <head>
@@ -488,6 +511,16 @@ img.dhammacakka {{
     pdf_path = PUBLISHED_DIR / f"{name}{suffix}.pdf"
     HTML(string=full_html, base_url=str(REPO_ROOT)).write_pdf(pdf_path)
     print(f"[PDF]  {name} -> {pdf_path} ({pdf_path.stat().st_size / 1024:.1f} KB)")
+
+    # 2. Convert to TXT
+    txt_path = PUBLISHED_DIR / f"{name}{suffix}.txt"
+    convert_to_txt(content, txt_path)
+    print(f"[TXT]  {name} -> {txt_path} ({txt_path.stat().st_size / 1024:.1f} KB)")
+
+    # 3. Convert to DOCX
+    docx_path = PUBLISHED_DIR / f"{name}{suffix}.docx"
+    convert_to_docx(content, docx_path)
+    print(f"[DOCX] {name} -> {docx_path} ({docx_path.stat().st_size / 1024:.1f} KB)")
 
 
 if __name__ == "__main__":
