@@ -175,14 +175,14 @@ def trim_toc(content: str, toc_limit: int | None, toc_keep: list[int] | None) ->
 
 
 def _get_token_font(token: str, sinhala_font_path: Path, latin_font_path: Path, size: int) -> ImageFont.FreeTypeFont:
-    if token.isdigit():
+    if any(c.isdigit() or c in "-\u2013\u2014" for c in token):
         if latin_font_path.exists():
             return ImageFont.truetype(str(latin_font_path), size)
     return ImageFont.truetype(str(sinhala_font_path), size)
 
 
 def _get_mixed_text_width(text: str, font_path: Path, latin_font_path: Path, size: int) -> int:
-    tokens = re.split(r'(\d+)', text)
+    tokens = re.split(r'([\d\-\u2013\u2014]+)', text)
     total_w = 0
     for token in tokens:
         if not token:
@@ -195,7 +195,7 @@ def _get_mixed_text_width(text: str, font_path: Path, latin_font_path: Path, siz
 
 def _draw_mixed_text(draw: ImageDraw.ImageDraw, x: int, y: int, text: str,
                      font_path: Path, latin_font_path: Path, size: int, fill: str = "black") -> int:
-    tokens = re.split(r'(\d+)', text)
+    tokens = re.split(r'([\d\-\u2013\u2014]+)', text)
     curr_x = x
     max_h = 0
     for token in tokens:
