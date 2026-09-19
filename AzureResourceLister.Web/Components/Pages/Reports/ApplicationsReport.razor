@@ -1,0 +1,238 @@
+@page "/reports/applications"
+@using System.Text
+@inject ReportService ReportSvc
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<PageTitle>Applications — Cost Report</PageTitle>
+
+<h1>Applications</h1>
+
+@* ── Filter bar ────────────────────────────────────────────────────────────── *@
+<div class="filter-bar">
+    <label class="filter-item">
+        Year
+        <select @bind="_filter.Year">
+            @foreach (var y in _filterOptions.Years)
+            {
+                <option value="@y">@y</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Month
+        <select @bind="_filter.Month">
+            @for (int m = 1; m <= 12; m++)
+            {
+                var month = m;
+                <option value="@month">@MonthName(month)</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Owner
+        <select @bind="_filter.OwnerName">
+            <option value="">All owners</option>
+            @foreach (var o in _filterOptions.Owners)
+            {
+                <option value="@o">@o</option>
+            }
+        </select>
+    </label>
+
+    <label class="filter-item">
+        Cost Centre
+        <select @bind="_filter.CostCentre">
+            <option value="">All cost centres</option>
+            @foreach (var cc in _filterOptions.CostCentres)
+            {
+                <option value="@cc">@cc</option>
+            }
+        </select>
+    </label>
+
+    <button class="btn btn-primary" @onclick="RunReportAsync" disabled="@_loading">
+        @(_loading ? "Loading..." : "Run Report")
+    </button>
+</div>
+
+@* ── Search bar ────────────────────────────────────────────────────────────── *@
+@if (_report is not null && _report.Rows.Count > 0)
+{
+    <div class="search-bar">
+        <input class="search-input" placeholder="Search application name..."
+               @bind="_searchText" @bind:event="oninput" />
+        @if (!string.IsNullOrWhiteSpace(_searchText))
+        {
+            <button class="btn-link" @onclick="() => _searchText = string.Empty">Clear</button>
+        }
+        <button class="btn btn-export" @onclick="ExportCsvAsync">⬇ Export CSV</button>
+    </div>
+}
+
+@if (_error is not null)
+{
+    <div class="alert alert-danger">@_error</div>
+}
+
+@if (_report is not null)
+{
+    <div class="report-summary">
+        Total: <strong>@FormatCost(FilteredTotal)</strong>
+        &nbsp;·&nbsp; @FilteredRows.Count() application(s)
+        @if (FilteredRows.Count() > PageSize)
+        {
+            <span>&nbsp;·&nbsp; Page @_page of @TotalPages</span>
+        }
+    </div>
+
+    @if (!FilteredRows.Any())
+    {
+        <p class="no-data">No cost data found for the selected period and filters.</p>
+    }
+    else
+    {
+        <div class="table-wrapper">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="col-name">Application</th>
+                        <th rowspan="2" class="col-owner">Owner</th>
+                        <th colspan="@_report.Environments.Count" class="col-cost-group">Cost</th>
+                        <th rowspan="2" class="col-total">Total</th>
+                        <th rowspan="2" class="col-cc">Cost Centre</th>
+                        <th rowspan="2" class="col-action"></th>
+                    </tr>
+                    <tr>
+                        @foreach (var env in _report.Environments)
+                        {
+                            <th class="col-env">@env</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in PagedRows)
+                    {
+                        <tr>
+                            <td class="col-name">@row.ApplicationName</td>
+                            <td class="col-owner">@row.OwnerName</td>
+                            @foreach (var env in _report.Environments)
+                            {
+                                <td class="col-cost">@FormatCost(row.CostByEnvironment.GetValueOrDefault(env))</td>
+                            }
+                            <td class="col-total">@FormatCost(row.TotalCost)</td>
+                            <td class="col-cc">@row.CostCentre</td>
+                            <td class="col-action">
+                                <button class="btn-link" @onclick='() => DrillDown(row.ApplicationName)'>Resources</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (TotalPages > 1)
+        {
+            <div class="pagination">
+                <button class="btn-link" disabled="@(_page <= 1)" @onclick="PrevPage">&laquo; Prev</button>
+                <span>Page @_page of @TotalPages</span>
+                <button class="btn-link" disabled="@(_page >= TotalPages)" @onclick="NextPage">Next &raquo;</button>
+            </div>
+        }
+    }
+}
+
+@code {
+    private const int PageSize = 200;
+
+    private ReportFilter        _filter        = new();
+    private ReportFilterOptions _filterOptions = new();
+    private CostReport<ApplicationCostRow>? _report;
+    private string  _searchText = string.Empty;
+    private int     _page  = 1;
+    private bool    _loading;
+    private string? _error;
+
+    private IEnumerable<ApplicationCostRow> FilteredRows =>
+        (_report?.Rows ?? [])
+        .Where(r => string.IsNullOrWhiteSpace(_searchText)
+                 || r.ApplicationName.Contains(_searchText, StringComparison.OrdinalIgnoreCase));
+
+    private IEnumerable<ApplicationCostRow> PagedRows =>
+        FilteredRows.Skip((_page - 1) * PageSize).Take(PageSize);
+
+    private decimal FilteredTotal => FilteredRows.Sum(r => r.TotalCost);
+
+    private int TotalPages =>
+        (int)Math.Ceiling(FilteredRows.Count() / (double)PageSize);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _filterOptions = await ReportSvc.GetFilterOptionsAsync();
+            if (!_filterOptions.Years.Contains(_filter.Year) && _filterOptions.Years.Count > 0)
+                _filter.Year = _filterOptions.Years[0];
+        }
+        catch (Exception ex) { _error = ex.Message; return; }
+
+        await RunReportAsync();
+    }
+
+    private async Task RunReportAsync()
+    {
+        _loading    = true;
+        _error      = null;
+        _page       = 1;
+        _searchText = string.Empty;
+        StateHasChanged();
+
+        try   { _report = await ReportSvc.GetApplicationCostsAsync(_filter); }
+        catch (Exception ex) { _error = ex.Message; }
+        finally { _loading = false; }
+    }
+
+    private void PrevPage() { _page--; }
+    private void NextPage() { _page++; }
+
+    private void DrillDown(string applicationName)
+    {
+        var url = $"/reports/resources?application={Uri.EscapeDataString(applicationName)}" +
+                  $"&year={_filter.Year}&month={_filter.Month}";
+        Nav.NavigateTo(url);
+    }
+
+    private async Task ExportCsvAsync()
+    {
+        if (_report is null) return;
+        var sb = new StringBuilder();
+
+        var headers = new List<string> { "Application", "Owner", "Cost Centre" };
+        foreach (var env in _report.Environments) headers.Add(env);
+        headers.Add("Total");
+        sb.AppendLine(CsvRow(headers));
+
+        foreach (var row in FilteredRows)
+        {
+            var cells = new List<string> { row.ApplicationName, row.OwnerName, row.CostCentre };
+            foreach (var env in _report.Environments)
+                cells.Add(Math.Round(row.CostByEnvironment.GetValueOrDefault(env), 0).ToString("N0"));
+            cells.Add(Math.Round(row.TotalCost, 0).ToString("N0"));
+            sb.AppendLine(CsvRow(cells));
+        }
+
+        await JS.InvokeVoidAsync("downloadCsv",
+            $"applications-{_filter.Year}-{_filter.Month:D2}.csv",
+            sb.ToString());
+    }
+
+    private static string CsvRow(IEnumerable<string> cells) =>
+        string.Join(",", cells.Select(c => $"\"{c.Replace("\"", "\"\"")}\""));
+
+    private static string FormatCost(decimal amount) => "$" + Math.Round(amount, 0).ToString("N0");
+
+    private static string MonthName(int month) =>
+        System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(month);
+}
