@@ -463,6 +463,11 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
     epub.write_epub(epub_path, book)
     print(f"[EPUB] {name}: {len(chunks)} section(s) -> {epub_path} ({epub_path.stat().st_size / 1024:.1f} KB)")
 
+    # Save generated cover image to resources directory for local HTML PDF rendering
+    cover_img_path = RESOURCES_DIR / "cover.jpg"
+    if cover_bytes:
+        cover_img_path.write_bytes(cover_bytes)
+
     # 1. Convert to PDF via WeasyPrint with embedded Sinhala font
     html_pieces = [f'''<!DOCTYPE html>
 <html>
@@ -503,6 +508,7 @@ img.dhammacakka {{
 
     for i, chunk in enumerate(chunks):
         chunk_html = chunk.replace('images/dhammawheel.png', f'file://{RESOURCES_DIR / DHAMMAWHEEL_FILE}')
+        chunk_html = chunk_html.replace('images/cover.jpg', f'file://{RESOURCES_DIR / "cover.jpg"}')
         html_pieces.append(f'<div class="section-chunk">{chunk_html}</div>')
 
     html_pieces.append('</body></html>')
