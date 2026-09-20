@@ -355,25 +355,25 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: normal;\n'
         f'  font-weight: normal;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f'  src: url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: italic;\n'
         f'  font-weight: normal;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f'  src: url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: normal;\n'
         f'  font-weight: bold;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f'  src: url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
         f"@font-face {{\n"
         f'  font-family: "{FONT_FAMILY}";\n'
         f'  font-style: italic;\n'
         f'  font-weight: bold;\n'
-        f'  src: url("data:font/ttf;charset=utf-8;base64,{b64_font}") format("truetype"), url("../fonts/{FONT_FILE}") format("truetype");\n'
+        f'  src: url("../fonts/{FONT_FILE}") format("truetype");\n'
         f"}}\n\n"
         f"body, p, div, h1, h2, h3, h4, span, li, a {{\n"
         f'  font-family: "{FONT_FAMILY}", serif;\n'

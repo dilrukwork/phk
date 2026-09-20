@@ -88,8 +88,7 @@
 /* --- Epigraph / verses --- */
 
 .epigraph {
-  display: table;
-  margin: 1em auto;
+  margin: 1em 10%;
   font-style: italic;
   text-align: left;
 }
@@ -122,8 +121,8 @@
 }
 
 .toc-entry {
-  display: flex;
-  justify-content: space-between;
+  margin-bottom: 0.5em;
+  text-align: left;
 }
 
 /* Numbered lists (e.g. the "6 rare things" list) reuse .toc-entry's
@@ -137,8 +136,7 @@
 }
 
 .num-list .toc-entry {
-  justify-content: flex-start;
-  gap: 0.5em;
+  text-align: left;
 }
 
 /* --- Chapters / sermons --- */
@@ -186,20 +184,14 @@
 
 /* Side-by-side address/signature blocks (e.g. the publisher-details
    footnote): two independent columns of <br/>-separated lines, laid
-   out with flexbox instead of &nbsp; padding, which only lined up in
-   the original fixed-width print layout and breaks apart once the
-   text reflows. flex-wrap lets narrow readers stack the columns. */
+   out with standard block margins instead of flexbox for full reflow compatibility. */
 .two-col {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1em;
   font-size: 0.9em;
   margin-top: 2em;
 }
 
 .two-col .col {
-  flex: 1 1 45%;
+  margin-bottom: 1em;
 }
 
 .justifytext {
