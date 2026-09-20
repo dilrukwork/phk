@@ -276,7 +276,12 @@ def chapter_label(chunk: str, index: int) -> str | None:
 
 def convert_to_txt(raw_text: str, out_path: Path) -> None:
     soup = BeautifulSoup(raw_text, "html.parser")
-    plain_text = soup.get_text(separator="\n\n")
+    paragraphs = []
+    for p_elem in soup.find_all(['p', 'h1', 'h2', 'h3', 'div']):
+        text = p_elem.get_text().strip()
+        if text:
+            paragraphs.append(text)
+    plain_text = "\n\n".join(paragraphs)
     plain_text = re.sub(r"<!--.*?-->", "", plain_text, flags=re.S)
     plain_text = re.sub(r"\n{3,}", "\n\n", plain_text)
     out_path.write_text(plain_text.strip(), encoding="utf-8")
@@ -490,6 +495,24 @@ def build_publications(name: str, start_line: int | None = None, end_line: int |
         print(f"[MOBI] {name} -> {mobi_path} ({mobi_path.stat().st_size / 1024:.1f} KB)")
     else:
         print(f"[MOBI Error] {res.stderr}")
+
+    # 1b. Convert to AZW3 (KF8) for direct USB sideloading on modern Kindle e-readers
+    azw3_path = PUBLISHED_DIR / f"{name}{suffix}.azw3"
+    res_azw = subprocess.run(
+        [
+            "ebook-convert",
+            str(epub_path),
+            str(azw3_path),
+            f"--embed-font-family={FONT_FAMILY}",
+            "--language=en",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if res_azw.returncode == 0:
+        print(f"[AZW3] {name} -> {azw3_path} ({azw3_path.stat().st_size / 1024:.1f} KB)")
+    else:
+        print(f"[AZW3 Error] {res_azw.stderr}")
 
     # Save generated cover image to resources directory for local HTML PDF rendering
     cover_img_path = RESOURCES_DIR / "cover.jpg"
